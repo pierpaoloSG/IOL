@@ -1,0 +1,67 @@
+ <!-- Modal -->
+  
+  <div id="dateModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Seleziona intervallo di stampa</h4>
+      </div>
+      <div class="modal-body">  
+      
+             <form class="form-horizontal">
+                 <div class="control-group">
+                   <label>Indicare la data d'invio</label>
+                          <div class='input-group date col-sm-3' id='dataInvio' data-required-error="E' necessario inserire la data d'invio." data-date-format="DD/MM/YYYY">
+                            <input type='text' class="form-control" >
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                         </div>   
+                 </div>
+                 <br>
+                 <div class="control-group">
+                      <div class="make-switch"  data-on-label="SI" data-off-label="NO" >
+                            <label id="label-toggle-switch">Diffide</label>
+                                    <div class="controls">
+                                        <div class="make-switch" tabindex="0">
+                                          <input id="checkboxDiffide" type="checkbox" name="checkboxDiffide" checked>
+                                        </div>
+                                    </div>
+                     </div>
+                 </div>
+                 <br>
+                 <!--div class="control-group">
+                     <div class="make-switch" data-on-label="SI" data-off-label="NO" >
+                            <label id="label-toggle-switch">Etichette</label>
+                            <div class="controls">
+                                        <div class="make-switch" tabindex="0">
+                                          <input id="checkLabels" type="checkbox" name="checkboxLabels" checked>
+                                        </div>
+                            </div>
+                      </div>
+                 </div-->
+
+                 <div class="form-actions">
+                      <br>
+                     <button type="reset" class="btn btn-inverse">Reset</button>
+                 </div>
+            </form>
+                     
+                                          
+
+             
+      <div class="modal-footer">   
+
+               <button id="send" type="button" class="btn btn-default btn-sm pull-right" data-dismiss="modal">
+                                          <span class="glyphicon glyphicon-print"></span>
+                                          <span style="font-size:smaller;">Invia</span>
+               </button> 
+       </div>
+     </div>
+
+    </div>
+  </div>
+</div>
