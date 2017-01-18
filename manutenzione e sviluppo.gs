@@ -20,6 +20,8 @@ Correzione BUGS
  - se si stampano diffide appartenenti a file diversi, la tipologia flusso sulla stampa risulta errata - risolto
  - dopo la stampa delle diffide cancellare la selezione (altrimenti ricliccando su stampa vengono prodotti dei documenti scorretti) - risolto 
  - prima riga delle etichette troppo bassa. Provare a cancellare l'header da script 
+ 18/01/2017
+ - sviluppare controllo sull'ultima riga vuota e in mancanza aggiungerla. Ciò perchè attenzione se gli spreadsheet non hanno righe vuote sotto i dati si può incorrere in un errore di tipo (Service Error: Spreadsheet).
 
 SVILUPPO
 
@@ -28,16 +30,18 @@ SVILUPPO
 - le fatture sulle diffide vanno ordinate per data di emissione - fatto
 - per lo start-up impostare inizio riferimento pratica corretto (es. 6526/MP ) - fatto
 - file unico con più flussi da suddividere in base a importo totale pratica (MCR 500 - 999, MP 1000 - 2999, IOL >2999) - fatto
-- Stampa lista di controllo in coda alla stampa diffide. Rif Pratica, Tipologia flusso, Codice cliente, Ragione sociale, Indirizzo 
+- Stampa lista di controllo in coda alla stampa diffide. Rif Pratica, Tipologia flusso, Codice cliente, Ragione sociale, Indirizzo - fatto
+- template diffide spese legali aggiugere 00 dopo la virgola - fatto
+- utilizzare la colonna stato affido per determinare il flusso - fatto
 - gestione inserimenti Opposizioni
 - Liste di esportazione 
-- Formato importi con virgola e doppia cifra digitale
+- Formato importi con virgola e doppia cifra digitale - complicato
 - DUPLICATI - importare, progressivare, segnalare
-- ERRORI (es. <500 euro) importare, non progressivare, segnalare
 - OPPOSIZIONI, FALLIMENTI, CONCORDATI gestione ordinaria - importati IOL, progressivati, segnalati, no stampa diffida
-- lista di controllo in orizzontale unire prime due colonne
-- template diffide spese legali aggiugere 00 dopo la virgola
-- utilizzare la colonna stato affido per determinare il flusso
+- lista di controllo in orizzontale unire prime due colonne e aggiungere colonna Descrizione
+- indicazione utenti connessi
+- contatore numero documenti stampati in giornata
+
 
 
 

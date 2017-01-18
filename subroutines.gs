@@ -180,7 +180,7 @@ Logger.log(ssAffido.getUrl())
          break;
        case (statoAffido == 'AFFIDATA_AVV_ORD'):
          tipoFlusso = 'IOL'
-         offsetRiferimentoPratica = 7218
+         offsetRiferimentoPratica = 7219
          switch (true) {
            case (importoScoperto<10000):
              speseLegali = 300.00

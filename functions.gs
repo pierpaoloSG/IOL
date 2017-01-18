@@ -216,7 +216,7 @@ function getGoogleSpreadsheetAsExcel(url, sheet){
     
     blob.setName(sheet.getName() + ".xlsx");
     
-    MailApp.sendEmail("danielezappala@scenariopubblico.com", "Google Sheet to Excel", "The XLSX file is attached", {attachments: [blob]});
+    //MailApp.sendEmail("danielezappala@scenariopubblico.com", "Google Sheet to Excel", "The XLSX file is attached", {attachments: [blob]});
     
   } catch (f) {
     Logger.log(f.toString());
