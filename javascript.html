@@ -45,8 +45,7 @@ $(document).ready(function() {
         });
        })    
  // chiude il controllo della table      
- 
-       
+  
 //aggiorna la tableFiles (deve stare fuori dal .on della table
   
   $("#refreshTableFiles").click(function(){
@@ -125,7 +124,7 @@ $(document).ready(function() {
                   $('#outputPanelText').append(JSON.stringify(err))
                  }         
  
- 
+
   $('#print').on('click', function (e) {
       var objDiffide = {
         'Data invio':''}
@@ -159,24 +158,30 @@ $(document).ready(function() {
         {
           var runPrintDiffide = false
         }
-        // STAMPA ETICHETTE DISATTIVA
-//        if ($("#checkboxLabels").is(':checked')){
-//           var runPrintLabels = true
-//           console.log('printLabels: '+ runPrintLabels)
-//           showLoader()
-//           printLabels(objDiffide)
-//        }
-//        else
-//        {
-//          var runPrintLabels = false
-//        }
+
       })
  })
-    
-     
-                
-});  // close document ready function
-   
+ 
+    $('#unDoLast').on('click', function (e) {
+      var dates = []
+      var colImportDate = $('#tableDiffide tr td:nth-child(10)') 
+      var lastImport = Math.max.apply(Math, colImportDate.map(function(){
+            var date = $(this).text()
+            console.log(date)
+            dates.push(date)
+      return $(this).text()
+      }))
+      var lastImportDate = dates.reduce(function (a, b) { return a > b ? a : b; })
+      $('#confirmModal').modal('show')
+        $('#confirmOk').click(function(){
+        console.log(lastImportDate)
+        undoLastImport(lastImportDate)
+        })
+      })               
+
+}) 
+// close document ready function
+
 
 //check click on tableDiffide
 
@@ -310,7 +315,8 @@ $(document).ready(function() {
         }
     }); 
    
-  
+
+
     function printDiffide(objDiffide){
       console.log('printDiffide')
       //var objDiffide = JSON.parse(JSONObjDiffide)
@@ -512,19 +518,22 @@ google.script.run
                 tr = $('<tr>');
                 tr.append("<td >" + myCheckbox + "</td>");
                 tr.append("<td id='idDiffida' >" + diffide[i]['ID diffida'] + "</td>");
+                tr.append("<td >" + diffide[i]['Riferimento pratica']+"/"+diffide[i]['Tipologia flusso'] + "</td>");
                 
-                if (diffide[i]['Tipologia flusso']  == 'ERR'){
-                    tr.append("<td ><span class='label label-danger'>ERR</span></td>")
+                // crea badge nella colonna solo per pratiche ex-flusso
+                if ( diffide[i]['Stato pratica'] == 'OPPOSIZIONE' || diffide[i]['Stato pratica'] == 'FALLIMENTO' || diffide[i]['Stato pratica'] == 'CONCORDATO'){ 
+                    tr.append("<td ><span class='label label-warning'>" + diffide[i]['Stato pratica'] +"</span></td>");
+                }else
+                {
+                    tr.append("<td ></td>")
                 }
-                else{
-                    tr.append("<td >" + diffide[i]['Riferimento pratica']+"/"+diffide[i]['Tipologia flusso'] + "</td>");
-                }      
-                tr.append("<td >" + diffide[i]['Nome file affido'] + "</td>");
-                tr.append("<td >" + diffide[i]['Codice cliente'] + "</td>");
-                tr.append("<td >" + diffide[i]['Dato fiscale'] + "</td>");
-                tr.append("<td >" + diffide[i]['Ragione sociale'] + "</td>");
-                tr.append("<td >" + diffide[i]['Stato'] + "</td>");
-                tr.append("<td >" + moment(diffide[i]['Data importazione']).format("DD/MM/YYYY hh:mm:ss ") + "</td>");  
+                    tr.append("<td >" + diffide[i]['Nome file affido'] + "</td>");
+                    tr.append("<td >" + diffide[i]['Codice cliente'] + "</td>");
+                    tr.append("<td >" + diffide[i]['Dato fiscale'] + "</td>");
+                    tr.append("<td >" + diffide[i]['Ragione sociale'] + "</td>");
+                    tr.append("<td >" + diffide[i]['Stato'] + "</td>");
+                    tr.append("<td >" + moment(diffide[i]['Data importazione']).format("DD/MM/YYYY hh:mm:ss ") + "</td>");  
+                    
                 if (diffide[i]['Data stampa']!='') {
                           tr.append("<td>" + moment(diffide[i]['Data stampa']).format("DD/MM/YYYY hh:mm:ss ") + "</td>");
                 }
@@ -561,6 +570,28 @@ google.script.run
 function onErrorImporting(err){
      console.log(err)
 }
+
+
+//**************************
+//unDoLastImport - cancella l'ultima importazione
+
+function undoLastImport(lastImportDate){
+
+console.log('undoLastImport')
+//legge i files affidi da importare presenti su folder
+  google.script.run
+    .withSuccessHandler(onUndo)
+    .withFailureHandler(onFailure)
+    .deleteLastImportedDiffide(lastImportDate)
+ }
+ 
+// function onFailure(error) {
+//        var div = document.getElementById('outputPanelText');
+//        div.innerHTML = "ERROR: " + error.message;
+// }
+// 
+ function onUndo(){}
+
 </script>
 
 

@@ -97,6 +97,7 @@ Logger.log(ssAffido.getUrl())
  var errors = 0
  var arrayObjErrors=[]
  var objErrors
+ var statoAffido, statoPraticaWf
 
  
  // sheet diffideDaInviare
@@ -122,51 +123,22 @@ Logger.log(ssAffido.getUrl())
      //crea oggetto relativo a pratica protocollata
      var importoScoperto = objCasiNoFatture[i].importoScoperto
 
-     
-     // ASSEGNA TIPO FLUSSO IN BASE AD IMPORTO
-//     switch (true) {
-//       case (importoScoperto <500):
-//         tipoFlusso = 'ERR'
-//         offsetRiferimentoPratica = 0
-//         speseLegali = 100,00
-//         objErrors = {
-//          'Codice cliente': (objCasiNoFatture[i].codcliente),
-//          'Errore': 'Importo minore di 500 euro'
-//         }
-//       arrayObjErrors.push(objErrors) 
-//       Logger.log(arrayObjErrors)
-//         break;
-//       case (importoScoperto >=500 && importoScoperto<1000):
-//         tipoFlusso = 'MCR'
-//         offsetRiferimentoPratica = 2127
-//         speseLegali = 100.00
-//         break;
-//       case (importoScoperto >=1000 && importoScoperto<3000):
-//         tipoFlusso = 'MP'
-//         offsetRiferimentoPratica = 6528
-//         speseLegali = 200.00
-//         break;
-//       case (importoScoperto>=3000):
-//         tipoFlusso = 'IOL'
-//         offsetRiferimentoPratica = 7218
-//         switch (true) {
-//           case (importoScoperto<10000):
-//             speseLegali = 300.00
-//             break;
-//           case (importoScoperto<20000):
-//             speseLegali = 400.00
-//             break;
-//           case (importoScoperto>20000):
-//             speseLegali = 500.00
-//             break;
-//           default:
-//             break;
-//         }
-//       default:
-//         break;
-//     }
+
+    // gestisce gli EXTRA
     
-    var statoAffido = objCasiNoFatture[i].statoAffido    
+    statoPraticaWf = objCasiNoFatture[i].statoPraticaWf
+    switch (true) {
+        
+      case (statoPraticaWf == 'OPPOSIZIONE' || statoPraticaWf == 'FALLIMENTO' || statoPraticaWf == 'CONCORDATO'):
+            statoAffido = 'AFFIDATA_AVV_ORD'
+            break;
+      default:
+            var statoAffido = objCasiNoFatture[i].statoAffido
+            statoPraticaWf = ''
+            break;
+     }   
+     Logger.log("Stato affido " + statoAffido)
+     // gestisce lo stato affido da file
      switch (true) {
        case (statoAffido == 'AFFIDATA_AVV_MCR' ):
          tipoFlusso = 'MCR'
@@ -180,7 +152,7 @@ Logger.log(ssAffido.getUrl())
          break;
        case (statoAffido == 'AFFIDATA_AVV_ORD'):
          tipoFlusso = 'IOL'
-         offsetRiferimentoPratica = 7219
+         offsetRiferimentoPratica = 7218
          switch (true) {
            case (importoScoperto<10000):
              speseLegali = 300.00
@@ -198,7 +170,7 @@ Logger.log(ssAffido.getUrl())
          break;
      }       
           
-          
+     Logger.log(tipoFlusso)
      // restituisce un querySheet ossia lo sheet che contiene le sole diffide relative al tipoflusso
      var querySheetDiffide = querySheet(tipoFlusso)  
      Logger.log(querySheetDiffide.getName())
@@ -227,7 +199,8 @@ Logger.log(ssAffido.getUrl())
          'ID diffida' : newIdDiffida,
          'Riferimento pratica': newRiferimentoPratica,
          'Tipologia flusso': tipoFlusso,
-         'Stato affido': objCasiNoFatture[i].statoAffido,
+         'Stato affido': statoAffido,
+         'Stato pratica': statoPraticaWf,
          'Nome file affido': nomeFileAffido,
          'URL file affido': URLFileAffido,
          'Codice cliente': objCasiNoFatture[i].codcliente,
