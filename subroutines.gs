@@ -85,6 +85,7 @@ Logger.log(ssAffido.getUrl())
 
  var sheet = ssAffido.getSheetByName('VISURA CAMERALE CUSTOMER')
  var objVisureCamerali = grabObjectFromSheet(sheet)
+ Logger.log(objVisureCamerali)
  
  var newRiferimentoPratica
  var offsetRiferimentoPratica
@@ -97,6 +98,7 @@ Logger.log(ssAffido.getUrl())
  var errors = 0
  var arrayObjErrors=[]
  var objErrors
+ var statoAffido, statoPraticaWf
 
  
  // sheet diffideDaInviare
@@ -122,51 +124,23 @@ Logger.log(ssAffido.getUrl())
      //crea oggetto relativo a pratica protocollata
      var importoScoperto = objCasiNoFatture[i].importoScoperto
 
+  
      
-     // ASSEGNA TIPO FLUSSO IN BASE AD IMPORTO
-//     switch (true) {
-//       case (importoScoperto <500):
-//         tipoFlusso = 'ERR'
-//         offsetRiferimentoPratica = 0
-//         speseLegali = 100,00
-//         objErrors = {
-//          'Codice cliente': (objCasiNoFatture[i].codcliente),
-//          'Errore': 'Importo minore di 500 euro'
-//         }
-//       arrayObjErrors.push(objErrors) 
-//       Logger.log(arrayObjErrors)
-//         break;
-//       case (importoScoperto >=500 && importoScoperto<1000):
-//         tipoFlusso = 'MCR'
-//         offsetRiferimentoPratica = 2127
-//         speseLegali = 100.00
-//         break;
-//       case (importoScoperto >=1000 && importoScoperto<3000):
-//         tipoFlusso = 'MP'
-//         offsetRiferimentoPratica = 6528
-//         speseLegali = 200.00
-//         break;
-//       case (importoScoperto>=3000):
-//         tipoFlusso = 'IOL'
-//         offsetRiferimentoPratica = 7218
-//         switch (true) {
-//           case (importoScoperto<10000):
-//             speseLegali = 300.00
-//             break;
-//           case (importoScoperto<20000):
-//             speseLegali = 400.00
-//             break;
-//           case (importoScoperto>20000):
-//             speseLegali = 500.00
-//             break;
-//           default:
-//             break;
-//         }
-//       default:
-//         break;
-//     }
+    // gestisce gli le pratiche EX FLUSSO
     
-    var statoAffido = objCasiNoFatture[i].statoAffido    
+    statoPraticaWf = objCasiNoFatture[i].statoPraticaWf
+    switch (true) {
+        
+      case (statoPraticaWf == 'OPPOSIZIONE' || statoPraticaWf == 'FALLIMENTO' || statoPraticaWf == 'CONCORDATO'):
+            statoAffido = 'AFFIDATA_AVV_ORD'
+            break;
+      default:
+            var statoAffido = objCasiNoFatture[i].statoAffido
+            statoPraticaWf = ''
+            break;
+     }   
+     Logger.log("Stato affido " + statoAffido)
+     // gestisce lo stato affido da file
      switch (true) {
        case (statoAffido == 'AFFIDATA_AVV_MCR' ):
          tipoFlusso = 'MCR'
@@ -198,7 +172,7 @@ Logger.log(ssAffido.getUrl())
          break;
      }       
           
-          
+     Logger.log(tipoFlusso)
      // restituisce un querySheet ossia lo sheet che contiene le sole diffide relative al tipoflusso
      var querySheetDiffide = querySheet(tipoFlusso)  
      Logger.log(querySheetDiffide.getName())
@@ -227,7 +201,8 @@ Logger.log(ssAffido.getUrl())
          'ID diffida' : newIdDiffida,
          'Riferimento pratica': newRiferimentoPratica,
          'Tipologia flusso': tipoFlusso,
-         'Stato affido': objCasiNoFatture[i].statoAffido,
+         'Stato affido': statoAffido,
+         'Stato pratica': statoPraticaWf,
          'Nome file affido': nomeFileAffido,
          'URL file affido': URLFileAffido,
          'Codice cliente': objCasiNoFatture[i].codcliente,
@@ -247,7 +222,13 @@ Logger.log(ssAffido.getUrl())
      // ATTENZIONE il match è effettuato  tra il dato fiscale di CASI NO FATTURE e partita IVA o Codice FiscaLE di INFO VISURE CAMERALI
      // in quanto il codice cliente su Visure Camerali non corrisponde
      for (var j in objVisureCamerali){
-           if (objCasiNoFatture[i].datoFiscale === objVisureCamerali[j].partitaIva || objCasiNoFatture[i].datoFiscale === objVisureCamerali[j].codiceFiscale){  
+       Logger.log('objCasiNoFatture[i].datoFiscale ' + objCasiNoFatture[i].datoFiscale)
+             Logger.log('objVisureCamerali[j].partitaIva ' + objVisureCamerali[j].piva)
+             Logger.log('objVisureCamerali[j].codiceFiscale ' + objVisureCamerali[j].codiceFiscale)
+           if (objCasiNoFatture[i].datoFiscale === objVisureCamerali[j].piva || objCasiNoFatture[i].datoFiscale === objVisureCamerali[j].codiceFiscale){  
+             
+             Logger.log('ok')
+             
                  objDiffideDaImportare[i]['Indirizzo'] = objVisureCamerali[j].indirizzo
                  objDiffideDaImportare[i]['CAP'] = objVisureCamerali[j].cap
                  objDiffideDaImportare[i]['Comune'] = objVisureCamerali[j].comune
@@ -278,8 +259,9 @@ Logger.log(ssAffido.getUrl())
               // compone l'array con le fatture, inserisce anche il numero progressivo di fattura (z)
               fatture.push([dateTimeFattura, newIdDiffida, rifPraticaFlusso, objCasiFatture[z].codcliente,objCasiFatture[z].numeroFattura,objCasiFatture[z].dataFattura, objCasiFatture[z].importoScoperto, dataImportazione]) 
               importoTotale += objCasiFatture[z].importoScoperto
+
           }
-      
+       Logger.log(fatture) // il Codice Cliente è correttamente formattato come testo 
      }
 
    
@@ -295,14 +277,18 @@ Logger.log(ssAffido.getUrl())
       });
      Logger.log('fatture ordinate per data ' + fatture)
 
-
+     // elimina il primo elemento da tutti gli array
      fatture.map(function(val){
        return val.shift(0);
      });
-          Logger.log(fatture)
-          
+     
+   Logger.log(fatture) // il Codice Cliente è ancora correttamente formattato come testo 
+     
+     // inserisce l'array fatture nella proprietà Fatture dell oggetto come array 2D
+     
      objDiffideDaImportare[i]['Fatture'] = fatture
-     Logger.log(objDiffideDaImportare[i]['Fatture'])     
+     Logger.log(objDiffideDaImportare[i]['Fatture'])  // il Codice Cliente è ancora correttamente formattato come testo 
+
      // scrive gli affidi sul foglio Diffide Da Inviare
      
        rowDiffide++
@@ -333,9 +319,14 @@ Logger.log(ssAffido.getUrl())
         // per la proprietà 'Fatture' scrive i dati delle fatture sul foglio Dettaglio fatture
         rowFatture++
         var fatture = objDiffideDaImportare[i]['Fatture']
-        Logger.log('fatture scritte nel foglio dettaglio fatture ' + fatture)
+        Logger.log('fatture scritte nel foglio dettaglio fatture ' + fatture) // il Codice Cliente è ancora correttamente formattato come testo
         Logger.log(lastColDettaglioFatture)
-        sheetDettaglioFatture.getRange(rowFatture,1,fatture.length,lastColDettaglioFatture).setValues(fatture)
+        for (var r=0; r<fatture.length; r++){
+          Logger.log(fatture[r])
+          sheetDettaglioFatture.getRange(rowFatture,1,fatture.length,lastColDettaglioFatture).setValues(fatture)
+          //sheetDettaglioFatture.appendRow(fatture[r])
+        }
+        
  }
   
   Logger.log(objDiffideDaImportare)
