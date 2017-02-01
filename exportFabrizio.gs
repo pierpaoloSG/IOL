@@ -91,9 +91,9 @@ function exportTestataPratiche(objDiffideInviate){
     {
       rows= data.length-1
     }
+    Logger.log(lettereOuter)
     sheetExportLettere.getRange(2,1,rows,headers.length).clearContent()
     sheetExportLettere.getRange(2,1,lettereOuter.length,headers.length).setValues(lettereOuter)
-
   }
   exportDettagliFatture(objDiffideInviate)
   return 
@@ -129,7 +129,7 @@ function exportDettagliFatture(objDiffideInviate){
             fatturaInner[3] = dataFatturaFormatted // dataOraFattura
             fatturaInner[4] = fattureSheet[j]['Numero fattura'] // NumeroFattura
             fatturaInner[5] = 0 // IDAccount
-            fatturaInner[6] = fattureSheet[j]['Codice cliente']// CodiceCliente     
+            fatturaInner[6] = fattureSheet[j]['Codice cliente'] // CodiceCliente     
             fattureOuter.push(fatturaInner)    
             //sheetExportTestataPratiche.appendRow(testata)
         }
@@ -147,10 +147,9 @@ function exportDettagliFatture(objDiffideInviate){
       rows= data.length-1
     }
   sheetExportDettagliFatture.getRange(2,1,rows,headers.length).clearContent()
-  
+  Logger.log(fattureOuter)
   sheetExportDettagliFatture.getRange(2,1,fattureOuter.length,headers.length).setValues(fattureOuter)
-  return
-  
+  return 
 }
   
 
