@@ -1,0 +1,62 @@
+ <!-- Modal -->
+  
+  <div id="exFlussoModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Inserisci i dati della pratica extra flusso</h4>
+      </div>
+      <div class="modal-body">  
+      
+             <form id='formExFlusso' class="form-horizontal" data-toggle="validator" role="form">
+                 <label>Codice Cliente</label>
+                          <div class='input-group col-sm-3' >
+                            <input type='text' name="['Codice cliente']" class="form-control" required>
+                         </div>
+                  <label>Dato fiscale</label>
+                          <div class='input-group col-sm-3' >
+                          <input type='text' name="['Dato fiscale']" class="form-control" required>
+                         </div>
+                   <label>Ragione sociale</label>
+                          <div class='input-group col-sm-3' >
+                            <input type='text' name="['Ragione sociale']" class="form-control" required>
+                         </div>   
+                    <label>Tipologia pratica</label>
+                          <div class='input-group col-sm-3' >
+                            <select id='tipoPratica' name="['Tipologia pratica']" class="selectpicker">
+                                    <option>Opposizione</option>
+                                    <option>Fallimento</option>
+                                    <option>Concordato</option>
+                            </select>
+                         </div>   
+                 <label>Importo</label>
+                          <div class='input-group col-sm-3' >
+                            <input type='currency' name="['Importo totale']" class="form-control" required>
+                         </div> 
+                
+                 <div class="form-actions">
+                      <br>
+                     <button type="reset" class="btn btn-inverse">Reset</button>
+                 </div>
+                 
+                                <button id="sendExFlusso" type="submit" class="btn btn-default btn-sm pull-right" data-dismiss="modal">
+                                          <span class="glyphicon glyphicon-enter"></span>
+                                          <span style="font-size:smaller;">Invia</span>
+               </button> 
+            </form>
+                     
+                                          
+
+             
+      <div class="modal-footer">   
+
+
+       </div>
+     </div>
+
+    </div>
+  </div>
+</div>

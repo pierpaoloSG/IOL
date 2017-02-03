@@ -42,6 +42,10 @@
    <!--PDFMake-->
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.24/pdfmake.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.24/vfs_fonts.js"></script>
+  
+   <!--SerializeJSON-->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.serializeJSON/2.7.2/jquery.serializejson.js"></script>
+
 
 
   
@@ -124,11 +128,17 @@
                                         <span class="glyphicon glyphicon-print"></span>
                                         <span style="font-size:smaller;">Stampa</span>
                                     </button>     
+                                    
+                                     <button id="insertExFlusso" type="button" class="btn btn-default btn-sm " >
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                        <span style="font-size:smaller;">Inserisci pratica ex-flusso</span>
+                                    </button>
 
                                     <button id="unDoLast" type="button" class="btn btn-default btn-sm " disabled>
-                                        <span class="glyphicon glyphicon-undo"></span>
+                                        <span class="glyphicon glyphicon-remove"></span>
                                         <span style="font-size:smaller;">Elimina ultima importazione</span>
-                                    </button>     
+                                    </button>  
+                                    
                                 </div>
                             </div>
                        </div>
@@ -194,6 +204,7 @@
   <?!= include('styleCSS'); ?>
   <?!= include('javascript'); ?>
   <?!= include('dateModal'); ?>
+  <?!= include('exFlussoModal'); ?>
   <?!= include('confirmModal'); ?>
 
 </html>

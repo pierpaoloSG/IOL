@@ -14,6 +14,7 @@ function writeFilesToSheet() {
     var wroteOnSheet = lastRow -1
     var row
     var numberOfFilesInFolder = countFilesInFolder(affidiDaImportareFolderId)
+    var dataAssegnazione = Utilities.formatDate(new Date(), 'CET', 'dd/MM/YYYY HH.mm.ss')
     //itera lungo i file trovati sulla folder
     while (files.hasNext()) {
             file = files.next();
@@ -28,7 +29,7 @@ function writeFilesToSheet() {
               file.getDateCreated(),
               file.getUrl(),
               "Assegnato", //Stato
-              Utilities.formatDate(new Date(), 'CET', 'DD/MM/YYYY HH.mm.SS'), //Data assegnazione 
+              dataAssegnazione, 
               ""
             ];
         
@@ -39,18 +40,21 @@ function writeFilesToSheet() {
             
              //verifica se il file presente sulla folder è già presente sullo sheet
              // se non ci sono file già scritti sullo sheet salta al prossimo file sulla folder
-              for (row=2; row<=wroteOnSheet; row++){  
+              for (row=1; row<=wroteOnSheet; row++){  
                 Logger.log('wroteOnSheet ' + wroteOnSheet)
                 Logger.log(data[2])
                 Logger.log(sheet.getName())
               // se il file della folder è gia sullo sheet pulisci colonna Badge
-              if (data[2] == sheet.getRange(row,3).getValue()){
+              Logger.log('data[2] ' + data[2])
+              Logger.log('sheet col 3' + sheet.getRange(row+1,3).getValue())
+
+              // controlla che il file l'url del file letto dalla tabella è lo stesso di quello presente sullo sheet
+              if (data[2] == sheet.getRange(row+1,3).getValue()){
                             // memorizza che il file era già sullo sheet
                             alreadyOnSheet = true
                             // pulisce eventuale 'new' su Badge
-                            sheet.getRange(row,7).setValue('')
+                            //sheet.getRange(row+1,7).setValue('')
                         }
-        
                   }
               if(!alreadyOnSheet && (numberOfFilesInFolder > wroteOnSheet) || wroteOnSheet == 0){
                   // scrive il file sullo sheet
@@ -59,8 +63,8 @@ function writeFilesToSheet() {
                   Logger.log(sheet.getName())
                   sheet.appendRow(data);
                   wroteOnSheet++ 
-              }          
-     }
+              }
+     }           
         //torna su flow (readFilesAffidiFromFolder) 
 }
 
@@ -98,7 +102,7 @@ Logger.log(ssAffido.getUrl())
  var errors = 0
  var arrayObjErrors=[]
  var objErrors
- var statoAffido, statoPraticaWf
+ var statoAffido, tipologiaPraticaWf
 
  
  // sheet diffideDaInviare
@@ -107,7 +111,7 @@ Logger.log(ssAffido.getUrl())
  var headers = sheetDiffideDaInviare.getRange(1,1,1,lastColDiffide).getValues();
      Logger.log('headers ' + headers)
  var speseLegali
- var dataImportazione = Utilities.formatDate(new Date(), 'CET', 'DD/MM/YYYY HH.mm.SS')
+ var dataImportazione = Utilities.formatDate(new Date(), 'CET', 'dd/MM/YYYY HH.mm.ss')
  
  // sheet DettaglioFatture
  var rifPraticaFlusso, dataFattura, dateTimeFattura
@@ -120,7 +124,7 @@ Logger.log(ssAffido.getUrl())
       tipoFlusso = '***'
    Logger.log('i = ' + i)
      //incrementa ID e riferimento pratica 
-     newIdDiffida = Utilities.formatDate(new Date(), 'CET', 'YYYYMMDDHHmmSS')
+     newIdDiffida = Utilities.formatDate(new Date(), 'CET', 'YYYYMMddHHmmss')
      //crea oggetto relativo a pratica protocollata
      var importoScoperto = objCasiNoFatture[i].importoScoperto
 
@@ -128,15 +132,15 @@ Logger.log(ssAffido.getUrl())
      
     // gestisce gli le pratiche EX FLUSSO
     
-    statoPraticaWf = objCasiNoFatture[i].statoPraticaWf
+    tipologiaPraticaWf = objCasiNoFatture[i].tipologiaPraticaWf
     switch (true) {
         
-      case (statoPraticaWf == 'OPPOSIZIONE' || statoPraticaWf == 'FALLIMENTO' || statoPraticaWf == 'CONCORDATO'):
+      case (tipologiaPraticaWf == 'OPPOSIZIONE' || tipologiaPraticaWf == 'FALLIMENTO' || tipologiaPraticaWf == 'CONCORDATO'):
             statoAffido = 'AFFIDATA_AVV_ORD'
             break;
       default:
             var statoAffido = objCasiNoFatture[i].statoAffido
-            statoPraticaWf = ''
+            tipologiaPraticaWf = ''
             break;
      }   
      Logger.log("Stato affido " + statoAffido)
@@ -202,7 +206,7 @@ Logger.log(ssAffido.getUrl())
          'Riferimento pratica': newRiferimentoPratica,
          'Tipologia flusso': tipoFlusso,
          'Stato affido': statoAffido,
-         'Stato pratica': statoPraticaWf,
+         'Tipologia pratica': tipologiaPraticaWf,
          'Nome file affido': nomeFileAffido,
          'URL file affido': URLFileAffido,
          'Codice cliente': objCasiNoFatture[i].codcliente,
@@ -334,12 +338,12 @@ Logger.log(ssAffido.getUrl())
  }
   
   Logger.log(objDiffideDaImportare)
-  var results = [objDiffideDaImportare, arrayObjErrors]
+  var results = [objDiffideDaImportare, dataImportazione,arrayObjErrors]
   return results
 }
 
 
-function updateFileState(url){
+function updateFileState(url, dataImportazioneAffido){
   Logger.log('updateFileState')
   var fileState = 'ERR'
   var sheet = sheetFilesAffidi
@@ -351,12 +355,13 @@ function updateFileState(url){
         url = sheet.getRange(i+1, 3).getValue()
         sheet.getRange(i+1, 4).setValue('Importato')
         fileState=sheet.getRange(i+1, 4).getValue()
-        sheet.getRange(i+1, 6).setValue(new Date());
+        //var dataImportazione = 
+        sheet.getRange(i+1, 6).setValue(dataImportazioneAffido);
         sheet.getRange(i+1, 7).setValue('');
       }
   }
 var fileName = SpreadsheetApp.openByUrl(url).getBlob().getName()
-var fileNameUpdated = fileName + ' importato il ' + new Date() 
+var fileNameUpdated = fileName + ' importato il ' + dataImportazioneAffido 
 SpreadsheetApp.openByUrl(url).getBlob().setName(fileNameUpdated)
 }
 

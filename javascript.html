@@ -157,6 +157,17 @@ $(document).ready(function() {
       })
  })
  
+ 
+  $('#insertExFlusso').on('click', function (e) {
+
+      $('#exFlussoModal').modal('show');
+      console.log('showed modal')
+       $('#sendExFlusso').on('click', function () { 
+         var objExFlusso =   $('#formExFlusso').serializeJSON()
+         sendExFlusso(objExFlusso)
+       }); 
+  }); 
+
     $('#unDoLast').on('click', function (e) {
       var dates = []
       var colImportDate = $('#tableDiffide tr td:nth-child(10)') 
@@ -166,17 +177,19 @@ $(document).ready(function() {
       return $(this).text()
       }))
       var lastImportDate = dates.reduce(function (a, b) { return a > b ? a : b; })
-      $('#confirmModal').modal('show')
+      $('#confirmModal').modal('show');
         $('#confirmOk').click(function(){
         console.log(lastImportDate)
         undoLastImport(lastImportDate)
         $('#confirmModal').modal('hide')
-        })
-      })               
+        });
+      });              
+});
 
-}) 
 // close document ready function
 
+
+   
 
 //check click on tableDiffide
 
@@ -328,7 +341,7 @@ $(document).ready(function() {
         $icon.removeClass('glyphicon-refresh-animate')
         $icon.addClass('glyphicon-print')
         var outputMessage
-        var resultDate = moment().format("DD/MM/YYYY h:mm:ss ")
+        var resultDate = moment().format("dd/MM/YYYY h:mm:ss ")
         
         if (results[0]>1){
            resultMessage = results[0] + ' diffide correttamente stampate sul seguente file: \n'
@@ -366,7 +379,7 @@ $(document).ready(function() {
        $icon.removeClass('glyphicon-refresh-animate')
        $icon.addClass('glyphicon-print')
         var outputMessage
-        var resultDate = moment().format("DD/MM/YYYY h:mm:ss ")
+        var resultDate = moment().format("dd/MM/YYYY h:mm:ss ")
         if (results[0]>1){
            resultMessage = results[0] + ' etichette correttamente stampate sul seguente file: \n'
         }
@@ -451,7 +464,7 @@ console.log('createTableFiles')
         } 
     }
  }     
-     var resultDate = moment().format("DD/MM/YYYY hh:mm:ss ")
+     var resultDate = moment().format("dd/MM/YYYY hh:mm:ss ")
      switch(assegnati) {
      case 0:
      resultMessage = 'Non risultano files assegnati ancora da gestire.\n'
@@ -553,6 +566,30 @@ function onErrorImporting(err){
      console.log(err)
 }
 
+//**************************
+//sendExFlusso - inserisce exFlusso
+
+function sendExFlusso(objExFlusso){
+console.log('sendExFlusso')
+google.script.run
+  .withSuccessHandler(onSentExFlusso)
+  .withFailureHandler(onErrorExFlusso)
+  .insertExFlusso(objExFlusso)
+}
+
+function onSentExFlusso(message){
+
+    console.message
+
+}
+
+
+  function onErrorExFlusso(message){
+ 
+     console.log(message)
+ 
+   }
+
 
 //**************************
 //unDoLastImport - cancella l'ultima importazione
@@ -577,6 +614,7 @@ console.log('undoLastImport')
  console.log(message)
  
  }
+ 
 
 </script>
 

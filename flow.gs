@@ -25,9 +25,10 @@ function readDiffideFromFiles(arrayObjFilesAffidi){
       Logger.log(ssAffido.getName())
     var results = readAffido(ssAffido)
     var objDiffideDaImportare = results[0]
-    var erroriImportazioneDiffide = results[1]
+    var dataImportazioneAffido = results[1]
+    var erroriImportazioneDiffide = results[2]
     Logger.log("errori di importazione \n" + JSON.stringify(erroriImportazioneDiffide))
-    var fileState = updateFileState(url) 
+    var fileState = updateFileState(url,dataImportazioneAffido) 
     }
     Logger.log(objDiffideDaImportare)
     return JSON.stringify(objDiffideDaImportare)  

@@ -34,7 +34,7 @@ SVILUPPO
 - template diffide spese legali aggiugere 00 dopo la virgola - fatto
 - utilizzare la colonna stato affido per determinare il flusso - fatto
 - gestione inserimenti Opposizioni
-- Liste di esportazione 
+- Liste di esportazione ( in attesa di esito da Fabrizio)
 - Formato importi con virgola e doppia cifra digitale - complicato
 - DUPLICATI - importare, progressivare, segnalare
 - OPPOSIZIONI, FALLIMENTI, CONCORDATI gestione ordinaria - importati IOL, progressivati, segnalati, no stampa diffida
