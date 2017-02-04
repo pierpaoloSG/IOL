@@ -129,13 +129,14 @@ $(document).ready(function() {
       var objDiffide = {
         'Data invio':''}
       var diffide = []
-      var checkboxes = $("input.checkSingleDiffide:checked");
+      var checkboxes = $("input.checkSingleDiffide:visible:checked");
+      console.log(checkboxes.length)
       $(checkboxes).each(function(x){
             var selected = $(this).closest('tr').find('td').eq(1).html() 
             diffide.push(selected)
       }); 
       objDiffide.diffide = diffide
-      console.log('print clicked')
+      console.log('diffide to print ' + diffide)
       
       $('#dateModal').modal('show')
       $('#send').on('click', {objDiffide},  function (e) {
