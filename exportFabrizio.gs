@@ -5,8 +5,10 @@ function exportTestataPratiche(objDiffideInviate){
   
   
   var  objDiffideToExport = objDiffideInviate.filter(function (el) {
-  return el['Tipologia flusso'] != 'IOL' 
+  return el['Tipologia flusso'] != 'IOL'
   });
+  
+
   
   Logger.log(objDiffideToExport)
   var testataOuter = []
@@ -128,11 +130,9 @@ function exportDettagliFatture(objDiffideToExport){
   for (var i=0; i<objDiffideToExport.length; i++){
      for (j=0; j<fattureSheet.length; j++){
          if (objDiffideToExport[i]['ID diffida'] == fattureSheet[j]['idDiffida']){
-           
             var importo = fattureSheet[j]['Importo scoperto']
             Logger.log(typeof(importo))
-
-            // var importoFormatted = 
+            
             var dateFormatted = Utilities.formatDate(new Date(fattureSheet[j]['Data emissione']), 'CET', 'dd/MM/YYYY') 
             var dataFattura = '#'+dateFormatted+'#'
 
