@@ -144,7 +144,7 @@ $(document).ready(function() {
         if ($("#checkboxDiffide").is(':checked')){
            var runPrintDiffide = true
            $("input.checkSingleDiffide").prop('checked', false)
-           showLoader()
+           showLoader('print')
            printDiffide(objDiffide)
            
            diffide = []
@@ -398,11 +398,11 @@ $(document).ready(function() {
         var range = $('#range').val()
      });
 
-function showLoader(){
+function showLoader(icon){
                   // gestisce l'animazione dell'icona del button print
-                  var $icon = $('#print').find( ".glyphicon.glyphicon-print" );
-                    if($icon.hasClass('glyphicon-print')) {
-                        $icon.removeClass('glyphicon-print')
+                  var $icon = $('#'+icon).find( ".glyphicon.glyphicon-"+icon );
+                    if($icon.hasClass('glyphicon-'+icon)) {
+                        $icon.removeClass('glyphicon-'+icon)
                         $icon.addClass('glyphicon-refresh')
                         $icon.addClass('glyphicon-refresh-animate')
                         }

@@ -115,7 +115,7 @@ Logger.log(ssAffido.getUrl())
  
  // sheet DettaglioFatture
  var rifPraticaFlusso, dataFattura, dateTimeFattura
- var rowFatture = sheetDettaglioFatture.getLastRow()
+ var rowFatture = sheetDettaglioFatture.getLastRow() + 1
  var lastColDettaglioFatture = sheetDettaglioFatture.getLastColumn()
  Logger.log('lastColDettaglioFatture ' + lastColDettaglioFatture)
      
@@ -218,6 +218,7 @@ Logger.log(ssAffido.getUrl())
          'Provincia': objCasiNoFatture[i].provinciaResidenza,
          'Telefono':objCasiNoFatture[i].telefono,
          'Provenienza indirizzo': 'CACS',
+         'Importo totale': objCasiNoFatture[i].importoScoperto, // l'importo totale è quello del file CasiNoFatture !!
          'Data importazione': dataImportazione,
          'Stato': 'Importata'
        
@@ -246,54 +247,45 @@ Logger.log(ssAffido.getUrl())
     Logger.log('length objCasiFatture ' + objCasiFatture.length)
     var fatture = []
     for (var z=0; z<objCasiFatture.length; z++){
-    var fatturaInRatei = false
           rifPraticaFlusso = newRiferimentoPratica + "/" + tipoFlusso
           // inizializza il progressivo fattura
           Logger.log('codClienteFatture ' + objCasiFatture[z].codcliente + "--->" + 'codClienteDiffide ' + objCasiNoFatture[i].codcliente)
           if (objCasiFatture[z].codcliente === objCasiNoFatture[i].codcliente){
-             // accorpa i ratei di fattura
-             for (var w=0; w<fatture.length; w++){
-               if (objCasiFatture[z].numeroFattura === fatture[w][4]){
-                 fatturaInRatei = true
-                 fatture[w][6] = fatture[w][6] + objCasiFatture[z].importoScoperto // accorpa l'importo di questo rateo con quello già presente
-                 Logger.log(fatture[w][6])
-                 continue
-               }
-             }
-             if (fatturaInRatei == false){
                progressivoFattura++
                var dataImportazioneFattura = dataImportazione
-               dataFattura = new Date(objCasiFatture[z].dataFattura)
-               dateTimeFattura = dataFattura.getTime()
+               if (objCasiFatture[z].dataFattura){
+                 dataFattura = new Date(objCasiFatture[z].dataFattura) 
+                 dateTimeFattura = dataFattura.getTime() // non attribuisce un valore cronologicamente congruente alla data !!!
+               }
+               else
+               {
+                 dataFattura = ''
+                 dateTimeFattura = 1 // inserisce un datatime fittizio per ordinare le fatture (poi verrà eliminato)
+               }
                // compone l'array con le fatture, inserisce anche il numero progressivo di fattura (z)
                fatture.push([dateTimeFattura, newIdDiffida, rifPraticaFlusso, objCasiFatture[z].codcliente,objCasiFatture[z].numeroFattura,objCasiFatture[z].dataFattura, objCasiFatture[z].importoScoperto, dataImportazione]) 
-               importoTotale += objCasiFatture[z].importoScoperto
-             }
+               //importoTotale += objCasiFatture[z].importoScoperto
           }   
      }
 
-    
      Logger.log('fatture con shift e sort by date ' + JSON.stringify(fatture)) 
      // finalizza l'oggetto diffida
      objDiffideDaImportare[i]['Fatture presenti'] = progressivoFattura
-     objDiffideDaImportare[i]['Importo totale'] = importoTotale
+     //objDiffideDaImportare[i]['Importo totale'] = importoTotale
      objDiffideDaImportare[i]['Spese legali'] = speseLegali
      
      // ordina fatture per data di emissione
       fatture.sort(function(a,b) {
         return a[0]-b[0]
       });
-     Logger.log('fatture ordinate per data ' + fatture)
-
+     Logger.log('fatture ordinate per data ' + JSON.stringify(fatture))
      // elimina il primo elemento da tutti gli array
      fatture.map(function(val){
        return val.shift(0);
      });
      
    Logger.log(fatture) // il Codice Cliente è ancora correttamente formattato come testo 
-     
-     // inserisce l'array fatture nella proprietà Fatture dell oggetto come array 2D
-     
+     // inserisce l'array 2D fatture nella proprietà Fatture come stringa 
      objDiffideDaImportare[i]['Fatture'] = fatture
      Logger.log(objDiffideDaImportare[i]['Fatture'])  // il Codice Cliente è ancora correttamente formattato come testo 
 
@@ -325,17 +317,13 @@ Logger.log(ssAffido.getUrl())
           }
          }
         // per la proprietà 'Fatture' scrive i dati delle fatture sul foglio Dettaglio fatture
-        rowFatture++
         var fatture = objDiffideDaImportare[i]['Fatture']
         Logger.log('fatture scritte nel foglio dettaglio fatture ' + fatture) // il Codice Cliente è ancora correttamente formattato come testo
         Logger.log(lastColDettaglioFatture)
-        for (var r=0; r<fatture.length; r++){
-          Logger.log(fatture[r])
-          sheetDettaglioFatture.getRange(rowFatture,1,fatture.length,lastColDettaglioFatture).setValues(fatture)
+        sheetDettaglioFatture.getRange(rowFatture,1,fatture.length,lastColDettaglioFatture).setValues(fatture)
           //sheetDettaglioFatture.appendRow(fatture[r])
-        }
-        
- }
+        rowFatture = rowFatture + fatture.length
+}
   
   Logger.log(objDiffideDaImportare)
   var results = [objDiffideDaImportare, dataImportazione,arrayObjErrors]

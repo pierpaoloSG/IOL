@@ -81,6 +81,7 @@ function exportTestataPratiche(objDiffideInviate){
     sheetExportRecapiti.getRange(2,1,testataOuter.length,headers.length).setValues(addressOuter)
     
     
+    
     // export Lettere
     
     lettere  = [,,,,]
@@ -102,8 +103,12 @@ function exportTestataPratiche(objDiffideInviate){
     }
     Logger.log(lettereOuter)
     sheetExportLettere.getRange(2,1,rows,headers.length).clearContent()
-    sheetExportLettere.getRange(2,1,lettereOuter.length,headers.length).setValues(lettereOuter)
+    sheetExportLettere.getRange(2,1,lettereOuter.length,headers.length).setValues(lettereOuter)    
   }
+  
+  removeEmptyRows(sheetExportTestataPratiche)
+  removeEmptyRows(sheetExportLettere)
+  removeEmptyRows(sheetExportRecapiti)
   exportDettagliFatture(objDiffideToExport)
   return 
   
@@ -128,14 +133,14 @@ function exportDettagliFatture(objDiffideToExport){
             Logger.log(typeof(importo))
 
             // var importoFormatted = 
-            var dataFattura = fattureSheet[j]['Data emissione']
-            var dataFatturaFormatted = Utilities.formatDate(dataFattura, 'CET', 'dd-MMM-YY')
+            var dateFormatted = Utilities.formatDate(new Date(fattureSheet[j]['Data emissione']), 'CET', 'dd/MM/YYYY') 
+            var dataFattura = '#'+dateFormatted+'#'
 
             fatturaInner = [,,,,,,,]     
             fatturaInner[0] = '' // IDFattura
             fatturaInner[1] = '' // Descrizione
             fatturaInner[2] = fattureSheet[j]['Importo scoperto']
-            fatturaInner[3] = dataFatturaFormatted // dataOraFattura
+            fatturaInner[3] = dataFattura // dataFattura
             fatturaInner[4] = fattureSheet[j]['Numero fattura'] // NumeroFattura
             fatturaInner[5] = 0 // IDAccount
             fatturaInner[6] = fattureSheet[j]['Codice cliente'] // CodiceCliente     
@@ -158,6 +163,7 @@ function exportDettagliFatture(objDiffideToExport){
   sheetExportDettagliFatture.getRange(2,1,rows,headers.length).clearContent()
   Logger.log(fattureOuter)
   sheetExportDettagliFatture.getRange(2,1,fattureOuter.length,headers.length).setValues(fattureOuter)
+  removeEmptyRows(sheetExportDettagliFatture)
   return 
 }
   

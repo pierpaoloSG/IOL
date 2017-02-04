@@ -261,6 +261,13 @@ function getGoogleSpreadsheetAsExcel(){
   }
 }
 
-
-
-
+function removeEmptyRows(sh){
+  var maxRows = sh.getMaxRows(); 
+  var lastRow = sh.getLastRow();
+  Logger.log(lastRow)
+  Logger.log(maxRows)
+  Logger.log(maxRows-lastRow)
+  if (maxRows != lastRow){
+      sh.deleteRows(lastRow+1, maxRows-lastRow);
+  }
+}
