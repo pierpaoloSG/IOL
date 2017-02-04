@@ -5,10 +5,8 @@ function exportTestataPratiche(objDiffideInviate){
   
   
   var  objDiffideToExport = objDiffideInviate.filter(function (el) {
-  return el['Tipologia flusso'] != 'IOL'
+  return el['Tipologia flusso'] != 'IOL' 
   });
-  
-
   
   Logger.log(objDiffideToExport)
   var testataOuter = []
@@ -128,25 +126,37 @@ function exportDettagliFatture(objDiffideToExport){
   var fattureOuter, fatturaInner, prop 
   var fattureOuter=[]
   for (var i=0; i<objDiffideToExport.length; i++){
-     for (j=0; j<fattureSheet.length; j++){
-         if (objDiffideToExport[i]['ID diffida'] == fattureSheet[j]['idDiffida']){
-            var importo = fattureSheet[j]['Importo scoperto']
-            Logger.log(typeof(importo))
-            
-            var dateFormatted = Utilities.formatDate(new Date(fattureSheet[j]['Data emissione']), 'CET', 'dd/MM/YYYY') 
-            var dataFattura = '#'+dateFormatted+'#'
-
-            fatturaInner = [,,,,,,,]     
-            fatturaInner[0] = '' // IDFattura
-            fatturaInner[1] = '' // Descrizione
-            fatturaInner[2] = fattureSheet[j]['Importo scoperto']
-            fatturaInner[3] = dataFattura // dataFattura
-            fatturaInner[4] = fattureSheet[j]['Numero fattura'] // NumeroFattura
-            fatturaInner[5] = 0 // IDAccount
-            fatturaInner[6] = fattureSheet[j]['Codice cliente'] // CodiceCliente     
-            fattureOuter.push(fatturaInner)    
-            //sheetExportTestataPratiche.appendRow(testata)
-        }
+      var  fattureSheetFiltered = fattureSheet.filter(function (el) {
+        return el['Data fattura'] != '' 
+      });
+     for (j=0; j<fattureSheetFiltered.length; j++){
+         if (objDiffideToExport[i]['ID diffida'] == fattureSheetFiltered[j]['idDiffida']){
+             var importo = fattureSheetFiltered[j]['Importo scoperto']
+             Logger.log(typeof(importo))
+             
+             if (fattureSheetFiltered[j]['Data emissione']!=''){
+               var dateFormatted = Utilities.formatDate(new Date(fattureSheetFiltered[j]['Data emissione']), 'CET', 'dd/MM/YYYY') 
+               var dataFattura = '#'+dateFormatted+'#'
+             }
+             else
+             {
+                var dataFattura = ''
+             }
+           
+             
+             
+             fatturaInner = [,,,,,,,]     
+             fatturaInner[0] = '' // IDFattura
+             fatturaInner[1] = '' // Descrizione
+             fatturaInner[2] = fattureSheetFiltered[j]['Importo scoperto']
+             fatturaInner[3] = dataFattura // dataFattura
+             fatturaInner[4] = fattureSheetFiltered[j]['Numero fattura'] // NumeroFattura
+             fatturaInner[5] = 0 // IDAccount
+             fatturaInner[6] = fattureSheetFiltered[j]['Codice cliente'] // CodiceCliente     
+             fattureOuter.push(fatturaInner)
+             Logger.log(fattureOuter)
+             //sheetExportTestataPratiche.appendRow(testata)
+           }
       }
    }
 

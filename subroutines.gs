@@ -209,14 +209,14 @@ Logger.log(ssAffido.getUrl())
          'Tipologia pratica': tipologiaPraticaWf,
          'Nome file affido': nomeFileAffido,
          'URL file affido': URLFileAffido,
-         'Codice cliente': objCasiNoFatture[i].codcliente,
-         'Dato fiscale': objCasiNoFatture[i].datoFiscale,
-         'Ragione sociale': objCasiNoFatture[i].ragioneSociale,
+         'Codice cliente': String(objCasiNoFatture[i].codcliente),
+         'Dato fiscale': String(objCasiNoFatture[i].datoFiscale),
+         'Ragione sociale': String(objCasiNoFatture[i].ragioneSociale),
          'Indirizzo': objCasiNoFatture[i].indirizzoResidenza,
-         'CAP': objCasiNoFatture[i].capResidenza,
+         'CAP': String(objCasiNoFatture[i].capResidenza),
          'Comune' : objCasiNoFatture[i].comuneResidenza,
          'Provincia': objCasiNoFatture[i].provinciaResidenza,
-         'Telefono':objCasiNoFatture[i].telefono,
+         'Telefono': String(objCasiNoFatture[i].telefono),
          'Provenienza indirizzo': 'CACS',
          'Importo totale': objCasiNoFatture[i].importoScoperto, // l'importo totale è quello del file CasiNoFatture !!
          'Data importazione': dataImportazione,
@@ -232,7 +232,7 @@ Logger.log(ssAffido.getUrl())
                  objDiffideDaImportare[i]['CAP'] = objVisureCamerali[j].cap
                  objDiffideDaImportare[i]['Comune'] = objVisureCamerali[j].comune
                  objDiffideDaImportare[i]['Provincia'] = objVisureCamerali[j].provincia
-                 objDiffideDaImportare[i]['Telefono'] = objCasiNoFatture[i].telefono
+                 objDiffideDaImportare[i]['Telefono'] = String(objCasiNoFatture[i].telefono)
                  objDiffideDaImportare[i]['Provenienza indirizzo'] = 'Info camerali'  
                  //objDiffideDaImportare[i]['Data importazione'] = dataImportazione
                  //objDiffideDaImportare[i]['Stato'] = 'Importata'  
@@ -254,18 +254,18 @@ Logger.log(ssAffido.getUrl())
                progressivoFattura++
                var dataImportazioneFattura = dataImportazione
                if (objCasiFatture[z].dataFattura){
-                 dataFattura = new Date(objCasiFatture[z].dataFattura) 
-                 dateTimeFattura = dataFattura.getTime() // non attribuisce un valore cronologicamente congruente alla data !!!
+                 dataFattura = objCasiFatture[z].dataFattura        
+                 dateTimeFattura = new Date(dataFattura).getTime() // non attribuisce un valore cronologicamente congruente alla data !!!
                }
                else
                {
                  dataFattura = ''
-                 dateTimeFattura = 1 // inserisce un datatime fittizio per ordinare le fatture (poi verrà eliminato)
+                 dateTimeFattura = progressivoFattura // inserisce un datatime fittizio per ordinare le fatture (poi verrà eliminato)
                }
                // compone l'array con le fatture, inserisce anche il numero progressivo di fattura (z)
-               fatture.push([dateTimeFattura, newIdDiffida, rifPraticaFlusso, objCasiFatture[z].codcliente,objCasiFatture[z].numeroFattura,objCasiFatture[z].dataFattura, objCasiFatture[z].importoScoperto, dataImportazione]) 
+               fatture.push([dateTimeFattura, newIdDiffida, rifPraticaFlusso, String(objCasiFatture[z].codcliente),objCasiFatture[z].numeroFattura,objCasiFatture[z].dataFattura, objCasiFatture[z].importoScoperto, dataImportazione]) 
                //importoTotale += objCasiFatture[z].importoScoperto
-          }   
+          }
      }
 
      Logger.log('fatture con shift e sort by date ' + JSON.stringify(fatture)) 
@@ -284,7 +284,7 @@ Logger.log(ssAffido.getUrl())
        return val.shift(0);
      });
      
-   Logger.log(fatture) // il Codice Cliente è ancora correttamente formattato come testo 
+     Logger.log(fatture) // il Codice Cliente è ancora correttamente formattato come testo 
      // inserisce l'array 2D fatture nella proprietà Fatture come stringa 
      objDiffideDaImportare[i]['Fatture'] = fatture
      Logger.log(objDiffideDaImportare[i]['Fatture'])  // il Codice Cliente è ancora correttamente formattato come testo 

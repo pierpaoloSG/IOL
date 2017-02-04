@@ -136,7 +136,7 @@ $(document).ready(function() {
             diffide.push(selected)
       }); 
       objDiffide.diffide = diffide
-      console.log('diffide to print ' + diffide)
+      console.log('diffide to print ' + objDiffide.diffide)
       
       $('#dateModal').modal('show')
       $('#send').on('click', {objDiffide},  function (e) {
@@ -325,7 +325,9 @@ $(document).ready(function() {
 
 
     function printDiffide(objDiffide){
-      console.log('printDiffide')
+      console.log('printDiffide ')
+      console.log (objDiffide.length)
+      
       //var objDiffide = JSON.parse(JSONObjDiffide)
       google.script.run
       .withSuccessHandler(onPrintedDiffide)
