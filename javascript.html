@@ -146,8 +146,7 @@ $(document).ready(function() {
            var runPrintDiffide = true
            $("input.checkSingleDiffide").prop('checked', false)
            showLoader('print')
-           printDiffide(objDiffide)
-           
+           printDiffide(objDiffide)     
            diffide = []
         }
         else
@@ -331,7 +330,6 @@ $(document).ready(function() {
 
     function printDiffide(objDiffide){
       console.log('printDiffide ')
-      console.log (objDiffide.length)
       
       //var objDiffide = JSON.parse(JSONObjDiffide)
       google.script.run
@@ -349,16 +347,10 @@ $(document).ready(function() {
         $icon.removeClass('glyphicon-refresh-animate')
         $icon.addClass('glyphicon-print')
         var outputMessage
-        var resultDate = moment().format("dd/MM/YYYY h:mm:ss ")
-        
-        if (results[0]>1){
-           resultMessage = results[0] + ' diffide correttamente stampate sul seguente file: \n'
-        }
-        else{
-           resultMessage = results[0] + ' diffida correttamente stampata sul seguente documento: \n'
-        }
-           outputMessage = resultDate + "- " + resultMessage +  '<a href="'+results[1]+'" target="_blank">' +results[2]+ '</a><br>'
-           outputMessage += resultDate + "- Lista di controllo: "  + '<a href="'+results[3]+'" target="_blank">' +results[4]+ '</a><br>'
+        var resultDate = moment().format("DD/MM/YYYY h:mm:ss ")
+           var resultMessage = (results[0] == 1) ? ' diffida correttamente stampata ':' diffide correttamente stampate ' 
+           outputMessage = "<p> " + resultDate + " - " + results[0] + " " + resultMessage +  " sul seguente documento: \n" +  "<a href='" +results[1]+"' target='_blank'>" +results[2]+ "</a><br>"
+           outputMessage += resultDate + "- Lista di controllo: <a href='" +results[3]+"' target='_blank'>" +results[4]+ "</a><br>"
            //aggiorna la tabella diffide
            console.log(outputMessage)
         $('#outputPanelText').append(outputMessage)

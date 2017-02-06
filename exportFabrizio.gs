@@ -1,12 +1,8 @@
 
-function exportTestataPratiche(objDiffideInviate){
+function exportTestataPratiche(objDiffideToExport){
   // esporta le diffide da inviare su testate pratiche per Fabrizio
   Logger.log('exportTestataPratiche')
   
-  
-  var  objDiffideToExport = objDiffideInviate.filter(function (el) {
-  return el['Tipologia flusso'] != 'IOL' 
-  });
   
   Logger.log(objDiffideToExport)
   var testataOuter = []
@@ -31,7 +27,7 @@ function exportTestataPratiche(objDiffideInviate){
     testata[7] = objDiffideToExport[i]['CAP'] // Cap
     testata[8] = objDiffideToExport[i]['Provincia'] 
     testata[9] = objDiffideToExport[i]['Nazione'] = 'Italia' // manca in tabella
-    testata[10] = objDiffideToExport[i]['Riferimento pratica'] + '/' + objDiffideInviate[i]['Tipologia flusso']
+    testata[10] = objDiffideToExport[i]['Riferimento pratica'] + '/' + objDiffideToExport[i]['Tipologia flusso']
     testata[11] = objDiffideToExport[i]['Data importazione'] // affido del (viene esportato su google doc in formato data)
     testata[12] = objDiffideToExport[i]['Codice cliente'] // CodiceCliente
     testata[13] = objDiffideToExport[i]['Dato fiscale'] // CodiceFiscale

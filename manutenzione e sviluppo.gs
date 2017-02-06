@@ -34,8 +34,6 @@ SVILUPPO
 - template diffide spese legali aggiugere 00 dopo la virgola - fatto
 - utilizzare la colonna stato affido per determinare il flusso - fatto
 - gestione inserimenti exFlusso - OPPOSIZIONI, FALLIMENTI, CONCORDATI gestione ordinaria - importati IOL, progressivati, segnalati, no stampa diffida - fatto
-- dato fiscale duplicato dentro lo stesso flusso stampa diffida unica
-- su stampa solo IOL correggere problema su export
 - escludere dalla stampa diffide le pratiche exFlusso (possibilmente in fase di selezione sul browser)
 - Liste di esportazione ( in attesa di esito da Fabrizio)
 - Formato importi con virgola e doppia cifra digitale - complicato
@@ -43,6 +41,8 @@ SVILUPPO
 - lista di controllo in orizzontale unire prime due colonne e aggiungere colonna Descrizione
 - indicazione utenti connessi
 - contatore numero documenti stampati in giornata
+
+
 
 
 QUOTAS
