@@ -130,22 +130,23 @@ $(document).ready(function() {
         'Data invio':''}
       var diffide = []
       var checkboxes = $("input.checkSingleDiffide:visible:checked");
-      console.log(checkboxes.length)
       $(checkboxes).each(function(x){
-            var selected = $(this).closest('tr').find('td').eq(1).html() 
-            diffide.push(selected)
-      }); 
+            //var selected = $(this).closest('tr').find('td').eq(1).html() 
+            if ($(this).closest('tr').find("td").eq(3).html() == ""){
+                var selected = $(this).closest('tr').find('td').eq(1).html()
+                diffide.push(selected)
+            }
+      });
+      
       objDiffide.diffide = diffide
       console.log('diffide to print ' + objDiffide.diffide)
       
       $('#dateModal').modal('show')
       $('#send').on('click', {objDiffide},  function (e) {
-        console.log('send clicked')
         objDiffide['Data invio'] = $("#dataInvio").find("input").val()
         if ($("#checkboxDiffide").is(':checked')){
            var runPrintDiffide = true
            $("input.checkSingleDiffide").prop('checked', false)
-           showLoader('print')
            printDiffide(objDiffide)     
            diffide = []
         }
@@ -340,7 +341,6 @@ $(document).ready(function() {
     }
       
       function onPrintedDiffide(results){   
-        //var results = JSON.parse(resultsToParse)
         console.log('diffide printed')
         var $icon = $('#print')
         $icon.removeClass('glyphicon-refresh')
@@ -508,7 +508,7 @@ google.script.run
     $('#tableDiffide tbody').remove()
         var tr
         if (diffide.length > 0){
-          for (i=0; i<diffide.length; i++){
+          for (i=diffide.length-1; i>=0; i--){
           
                 var myCheckbox = '<div vcenter> <label> <input id="checkbox'+(i+1)+'" class="checkSingleDiffide" type="checkbox"> </label> </div>'
                 tr = $('<tr>');
