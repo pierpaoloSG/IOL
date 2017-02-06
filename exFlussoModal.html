@@ -14,48 +14,49 @@
              <form id='formExFlusso' class="form-horizontal" data-toggle="validator" role="form">
                  <label>Codice Cliente</label>
                           <div class='input-group col-sm-3' >
-                            <input type='text' name="['Codice cliente']" class="form-control" required>
+                            <input type='text' name="Codice cliente:string" class="form-control" placeholder='ex: 0003492310' data-minlength = 10 data-maxlength = 10 data-error="Il campo deve avere 10 caratteri"  required>
                          </div>
+                         <div class="help-block with-errors">Il campo deve avere 10 caratteri</div>
                   <label>Dato fiscale</label>
                           <div class='input-group col-sm-3' >
-                          <input type='text' name="['Dato fiscale']" class="form-control" required>
+                          <input type='text' name="Dato fiscale:string" class="form-control" placeholder='ex: 12345678901 '   data-patter-error="I dati inseriti non sembrano riferirsi ad un Codice Fiscale'" required>
                          </div>
+                         <div class="help-block with-errors">Il campo deve avere almeno 11 caratteri</div>
+                  
                    <label>Ragione sociale</label>
                           <div class='input-group col-sm-3' >
-                            <input type='text' name="['Ragione sociale']" class="form-control" required>
+                            <input type='text' name="Ragione sociale:string" class="form-control" required>
                          </div>   
+                         
                     <label>Tipologia pratica</label>
                           <div class='input-group col-sm-3' >
-                            <select id='tipoPratica' name="['Tipologia pratica']" class="selectpicker">
-                                    <option>Opposizione</option>
-                                    <option>Fallimento</option>
-                                    <option>Concordato</option>
+                            <select id='tipoPratica' type= 'text' name="Tipologia pratica:string" class="selectpicker">
+                                    <option>OPPOSIZIONE</option>
+                                    <option>FALLIMENTO</option>
+                                    <option>CONCORDATO</option>
                             </select>
                          </div>   
+                         <div class="help-block with-errors"></div>
                  <label>Importo</label>
                           <div class='input-group col-sm-3' >
-                            <input type='currency' name="['Importo totale']" class="form-control" required>
+                            <input type='text' name="Importo totale:string" class="form-control" required>
                          </div> 
-                
-                 <div class="form-actions">
-                      <br>
-                     <button type="reset" class="btn btn-inverse">Reset</button>
+                         <div class="help-block with-errors"></div>
+                  <div class="form-actions">
+                       <button type="reset" class="btn btn-default btn-sm pull-rigth">
+                               <span style="font-size:smaller;">Reset</span>
+                       </button>
+                       <button id="sendExFlusso" type="submit" class="btn btn-default btn-sm pull-right" >
+                           <span class="glyphicon glyphicon-enter"></span>
+                           <span style="font-size:smaller;">Invia</span>
+                       </button> 
                  </div>
-                 
-                                <button id="sendExFlusso" type="submit" class="btn btn-default btn-sm pull-right" data-dismiss="modal">
-                                          <span class="glyphicon glyphicon-enter"></span>
-                                          <span style="font-size:smaller;">Invia</span>
-               </button> 
-            </form>
-                     
-                                          
-
-             
+              </form>       
+       </div>              
+      
       <div class="modal-footer">   
-
-
-       </div>
-     </div>
+                  
+      </div>
 
     </div>
   </div>

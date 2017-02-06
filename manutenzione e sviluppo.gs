@@ -33,11 +33,11 @@ SVILUPPO
 - Stampa lista di controllo in coda alla stampa diffide. Rif Pratica, Tipologia flusso, Codice cliente, Ragione sociale, Indirizzo - fatto
 - template diffide spese legali aggiugere 00 dopo la virgola - fatto
 - utilizzare la colonna stato affido per determinare il flusso - fatto
-- gestione inserimenti Opposizioni
+- gestione inserimenti exFlusso - OPPOSIZIONI, FALLIMENTI, CONCORDATI gestione ordinaria - importati IOL, progressivati, segnalati, no stampa diffida - fatto
+- escludere dalla stampa diffide le pratiche exFlusso (possibilmente in fase di selezione sul browser)
 - Liste di esportazione ( in attesa di esito da Fabrizio)
 - Formato importi con virgola e doppia cifra digitale - complicato
 - DUPLICATI - importare, progressivare, segnalare
-- OPPOSIZIONI, FALLIMENTI, CONCORDATI gestione ordinaria - importati IOL, progressivati, segnalati, no stampa diffida
 - lista di controllo in orizzontale unire prime due colonne e aggiungere colonna Descrizione
 - indicazione utenti connessi
 - contatore numero documenti stampati in giornata

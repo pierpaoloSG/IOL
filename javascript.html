@@ -162,12 +162,17 @@ $(document).ready(function() {
   $('#insertExFlusso').on('click', function (e) {
 
       $('#exFlussoModal').modal('show');
-      console.log('showed modal')
-       $('#sendExFlusso').on('click', function () { 
+      $('#formExFlusso').validator()
+      console.log('shown modal')
+       $('#formExFlusso').on('submit', function(e){
+         $('#exFlussoModal').modal('hide')
+         console.log('hidden')
          var objExFlusso =   $('#formExFlusso').serializeJSON()
          sendExFlusso(objExFlusso)
+         return false
        }); 
-  }); 
+      })
+     
 
     $('#unDoLast').on('click', function (e) {
       var dates = []
@@ -520,8 +525,8 @@ google.script.run
                 tr.append("<td >" + diffide[i]['Riferimento pratica']+"/"+diffide[i]['Tipologia flusso'] + "</td>");
                 
                 // crea badge nella colonna solo per pratiche ex-flusso
-                if ( diffide[i]['Stato pratica'] == 'OPPOSIZIONE' || diffide[i]['Stato pratica'] == 'FALLIMENTO' || diffide[i]['Stato pratica'] == 'CONCORDATO'){ 
-                    tr.append("<td ><span class='label label-warning'>" + diffide[i]['Stato pratica'] +"</span></td>");
+                if ( diffide[i]['Tipologia pratica'] == 'OPPOSIZIONE' || diffide[i]['Tipologia pratica'] == 'FALLIMENTO' || diffide[i]['Tipologia pratica'] == 'CONCORDATO'){ 
+                    tr.append("<td ><span class='label label-warning'>" + diffide[i]['Tipologia pratica'] +"</span></td>");
                 }else
                 {
                     tr.append("<td ></td>")
@@ -581,8 +586,7 @@ google.script.run
 }
 
 function onSentExFlusso(message){
-
-    console.message
+    createTableDiffide()
 
 }
 
