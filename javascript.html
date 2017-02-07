@@ -112,7 +112,7 @@ $(document).ready(function() {
                     // ricrea la tabella dei files aggiornata 
                     createTableFiles() 
                     // crea la tabella diffide
-                       var $icon = $('#print')
+                       var $icon = $('#refreshTableFiles')
                        $icon.removeClass('glyphicon-refresh')
                        $icon.removeClass('glyphicon-refresh-animate')
                        $icon.addClass('glyphicon-import')
@@ -126,6 +126,7 @@ $(document).ready(function() {
  
 
   $('#print').on('click', function (e) {
+     
       var objDiffide = {
         'Data invio':''}
       var diffide = []
@@ -138,7 +139,7 @@ $(document).ready(function() {
             }
       });
       
-      objDiffide.diffide = diffide
+      objDiffide.diffide = diffide.reverse()
       console.log('diffide to print ' + objDiffide.diffide)
       
       $('#dateModal').modal('show')
@@ -147,8 +148,8 @@ $(document).ready(function() {
         if ($("#checkboxDiffide").is(':checked')){
            var runPrintDiffide = true
            $("input.checkSingleDiffide").prop('checked', false)
-           printDiffide(objDiffide)     
-           diffide = []
+            printDiffide(objDiffide)     
+            diffide = []
         }
         else
         {
@@ -331,8 +332,10 @@ $(document).ready(function() {
 
     function printDiffide(objDiffide){
       console.log('printDiffide ')
-      
-      //var objDiffide = JSON.parse(JSONObjDiffide)
+      var $icon = $('#print')
+        $icon.removeClass('glyphicon-print')
+        $icon.addClass('glyphicon-refresh')
+        $icon.addClass('glyphicon-refresh-animate')
       google.script.run
       .withSuccessHandler(onPrintedDiffide)
       .withFailureHandler(onErrorPrinting)
@@ -398,15 +401,6 @@ $(document).ready(function() {
         var range = $('#range').val()
      });
 
-function showLoader(icon){
-                  // gestisce l'animazione dell'icona del button print
-                  var $icon = $('#'+icon).find( ".glyphicon.glyphicon-"+icon );
-                    if($icon.hasClass('glyphicon-'+icon)) {
-                        $icon.removeClass('glyphicon-'+icon)
-                        $icon.addClass('glyphicon-refresh')
-                        $icon.addClass('glyphicon-refresh-animate')
-                        }
- }
 
 function createTableFiles(){
 console.log('createTableFiles')
@@ -437,7 +431,7 @@ console.log('createTableFiles')
  }
  else
  {
-    for (var i=0; i<files.length; i++){
+    for (var i=files.length-1; i>=0; i--){
         if (files[i]['Stato affido']){ //== 'Assegnato')
           assegnati++
           myCheckbox = '<label><input id="checkbox'+(i+1)+'" class="checkSingle" type="checkbox"></label>'

@@ -1,5 +1,5 @@
 
-/*
+
 // ***** IOL DEV ******
 
 //FOLDERS
@@ -11,7 +11,7 @@ var affidiOriginaliFolderId = '0BznBNzYR5OHDVUpKVGYzTy0xeW8'
 var affidiOriginaliFolder = DriveApp.getFolderById(affidiDaImportareFolderId)
 
 // Spreadsheet
-var urlDB = '//docs.google.com/spreadsheets/d/179OhQjvAQZ9QMYoXptBn2AcxSeWVmFtao3bOZAyXroE/edit'
+var urlDB = 'https://docs.google.com/spreadsheets/d/1aGkTllbkOmEaI9KB9i56ODmUSyH9u_Rs-uu-ytVcnbk/edit'
 var ssDB = SpreadsheetApp.openByUrl(urlDB)
 var ssDBID = '179OhQjvAQZ9QMYoXptBn2AcxSeWVmFtao3bOZAyXroE'
 var sheetImpostazioni = ssDB.getSheetByName('Impostazioni')
@@ -21,10 +21,6 @@ var sheetDiffideInviate = ssDB.getSheetByName('Diffide inviate')
 var sheetDettaglioFatture = ssDB.getSheetByName('Dettaglio fatture')
 var sheetListaDiControllo = ssDB.getSheetByName('Lista di controllo')
 
-//var sheetExportTestataPratiche = ssDB.getSheetByName('Export Testata Pratiche')
-//var sheetExportDettagliFatture = ssDB.getSheetByName('Export Dettagli Fatture')
-//var sheetExportRecapiti = ssDB.getSheetByName('Export Recapiti')
-//var sheetExportLettere = ssDB.getSheetByName('Export Lettere')
 
 
 // STAMPA DIFFIDE
@@ -52,9 +48,9 @@ var sheetExportLettere = ssExportLettere.getSheetByName('Export Lettere')
 var urlExportDettagliFatture = 'https://docs.google.com/spreadsheets/d/1HvZZkQE5sJ79o5nW38p_OJp6sT_Wpd0pf6za_94h8JM/edit'
 var ssExportDettagliFatture = SpreadsheetApp.openByUrl(urlExportDettagliFatture)
 var sheetExportDettagliFatture = ssExportDettagliFatture.getSheetByName('Export Dettagli Fatture')
-*/
 
 
+/*
 //**** IOL release ******
 
 //FOLDERS
@@ -103,6 +99,6 @@ var urlExportDettagliFatture = 'https://docs.google.com/spreadsheets/d/1H_e68UFk
 var ssExportDettagliFatture = SpreadsheetApp.openByUrl(urlExportDettagliFatture)
 var sheetExportDettagliFatture = ssExportDettagliFatture.getSheetByName('Export Dettagli Fatture')
 
-
+*/
 
 
