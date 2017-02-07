@@ -82,7 +82,7 @@
                                         <tr class='info'>
                                             <label>
                                                 <th>
-                                                    <input id="checkedAll" type="checkbox" value="">
+                                                    <input class="checkedAll" type="checkbox" value="">
                                                 </th>
                                             </label>
                                             <th>Nome del file</th>
@@ -139,15 +139,16 @@
                                         <span style="font-size:smaller;">Elimina ultima importazione</span>
                                     </button>  
                                     <div class='pull-right'>Pratiche visualizzate: <span  id="praticheVisualizzate" class="badge"></span></div> 
+                                    <div class='pull-right'>Pratiche selezionate: <span  id="praticheSelezionate" class="badge"></span></div> 
                                 </div>
                             </div>
                        </div>
-                        <div class="panel-body">
+                        <div class="panel-body ">
                                     <table id="tableDiffide" class="table table-scroll table-striped table-list">
-                                        <thead>
-                                            <tr class="filters info">   
+                                        <thead >
+                                            <tr class=" filters info" >   
                                                 <th>
-                                                    <input id="checkedAllDiffide" type="checkbox" class="checkedAllDiffide" class="col-xs-1">
+                                                    <input id="checkedAll" type="checkbox" class="checkedAll"  >
                                                 </th> 
                                                 <th>
                                                     <input type="text" class="form-control " class="col-xs-1" placeholder="ID diffida" disabled>
@@ -185,7 +186,7 @@
                                                 </th>
                                             </tr>
                                         </thead>
-                                        <tbody style="overflow-y:auto; height:400px; position:absolute">
+                                        <tbody>
                                             <tr></tr>
                                         </tbody>
                                     </table>

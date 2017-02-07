@@ -10,40 +10,48 @@ $(document).ready(function() {
 
 //controlla il click su tableFiles
 
-      $("#tableFiles").on('click', function(){
-                    
-      //gestisce il change di checkedAll
-        $("#checkedAll").change(function(){
-          if(this.checked){
-            $(".checkSingle").each(function(){
-              this.checked=true;
-            })              
-          }else{
-            $(".checkSingle").each(function(){
-              this.checked=false;
-            })              
+      $("#tableFiles, #tableDiffide" ).on('click', function(){   
+      var $table = this
+      console.log('Hai cliccato su ' + $table.id)   
+      var $checkedAll = $($table).find(".checkedAll")
+      var $checkboxes = $($table).find("input[type=checkbox]")
+      var $checkSingle = $($table).find(".checkSingle")
+        $($checkedAll).change( function(){
+          console.log('Hai clicclato su checkedAll')
+         if ($($checkedAll).is(':checked')) {
+            $($checkboxes).each(function () {
+                $(this).prop("checked", true);
+            });
           }
-        });
-    
+          else
+          {
+            $($checkboxes).each(function () {
+                $(this).prop("checked", false);
+            }); 
+          }
+        })
 
     //gestisce il change di checkedSingle  
     
-    $(".checkSingle").change(function () {
+    $($checkSingle).change(function () {
             if ($(this).is(":checked")){
             var isAllChecked = 0;
-            $(".checkSingle").each(function(){
+            $($checkSingle).each(function(){
               if(!this.checked)
                  isAllChecked = 1;
             })              
             if(isAllChecked == 0){ 
-              $("#checkedAll").prop("checked", true); 
+              $($checkedAll).prop("checked", true); 
               }     
           }
           else {
-            $("#checkedAll").prop("checked", false);
+            $($checkedAll).prop("checked", false);
           };
         });
-       })    
+   })
+  }) 
+
+
  // chiude il controllo della table      
   
 //aggiorna la tableFiles (deve stare fuori dal .on della table
@@ -191,13 +199,13 @@ $(document).ready(function() {
         $('#confirmModal').modal('hide')
         });
       });              
-});
+
 
 // close document ready function
 
+  
 
-   
-
+/*
 //check click on tableDiffide
 
    $("#tableDiffide").on('click', function(){
@@ -235,8 +243,10 @@ $(document).ready(function() {
         $("#checkedAllDiffide").prop("checked", false);
         $("#print").prop('disabled', true)
       }  
-    });    
-});
+    });  
+    }); // non si capisce se è la chiusura del Document ready o no
+  */
+
    
 
      
@@ -244,15 +254,14 @@ $(document).ready(function() {
 
  // button Filter
         $('.filterable .btn-filter').click(function(){
-
+        
         var $panel = $(this).parents('.filterable'),
         $filters = $panel.find('.filters input'),
         $tbody = $panel.find('.table tbody');
+        
         if ($filters.prop('disabled') === true) {
             $filters.prop('disabled', false);
-//            var selectHtml = '<label>Data importazione</label><select id="FiltroData" class="selectpicker form-control" required></select>'
-//            $('#tableDiffide > thead > tr > th:nth-child(9)').html(selectHtml)
-            $filters.first().focus();
+            
         } else {
             $filters.val('').prop('disabled', true);
             $tbody.find('.no-result').remove();
@@ -507,7 +516,7 @@ google.script.run
         if (diffide.length > 0){
           for (i=diffide.length-1; i>=0; i--){
           
-                var myCheckbox = '<div vcenter> <label> <input id="checkbox'+(i+1)+'" class="checkSingleDiffide" type="checkbox"> </label> </div>'
+                var myCheckbox = '<div vcenter> <label> <input id="checkbox'+(i+1)+'" class="checkSingle" type="checkbox"> </label> </div>'
                 tr = $('<tr>');
                 tr.append("<td >" + myCheckbox + "</td>");
                 tr.append("<td id='idDiffida' >" + diffide[i]['ID diffida'] + "</td>");
