@@ -11,17 +11,17 @@ $(document).ready(function() {
 //controlla il click su tableFiles
 
       $("#tableFiles, #tableDiffide" ).on('click', function(){   
-      var $table = this
-      console.log('Hai cliccato su ' + $table.id)   
+      var $table = this 
       var $checkedAll = $($table).find(".checkedAll")
       var $checkboxes = $($table).find("input[type=checkbox]")
       var $checkSingle = $($table).find(".checkSingle")
         $($checkedAll).change( function(){
-          console.log('Hai clicclato su checkedAll')
          if ($($checkedAll).is(':checked')) {
             $($checkboxes).each(function () {
                 $(this).prop("checked", true);
             });
+            
+
           }
           else
           {
@@ -29,6 +29,9 @@ $(document).ready(function() {
                 $(this).prop("checked", false);
             }); 
           }
+        var numSelected = $($table).find(".checkSingle:checked").length
+        $("#praticheSelezionate").html(numSelected)
+          
         })
 
     //gestisce il change di checkedSingle  
@@ -47,8 +50,11 @@ $(document).ready(function() {
           else {
             $($checkedAll).prop("checked", false);
           };
+      var numSelected = $($table).find(".checkSingle:checked").length
+      $("#praticheSelezionate").html(numSelected)
         });
    })
+
   }) 
 
 
@@ -556,6 +562,9 @@ google.script.run
           }
           console.log('table diffide created')
           $("#praticheVisualizzate").html(diffide.length)
+          var numSelected = $(this).find(".checkSingle:checked").length
+          console.log('pratiche selezionate ' + numSelected) 
+          $("#praticheSelezionate").html(numSelected)
           var colImportDate = $('#tableDiffide tr td:nth-child(9)')        
           var high = Math.max.apply(Math, colImportDate.map(function(){
              var date = $(this).text()
