@@ -6,56 +6,192 @@ function start(){
     createTableDiffide()
 }
 
+
 $(document).ready(function() {
 
+// mini-plug-in che permette l'aggiornamento dei selectors con il metodo refresh es. $selector.refresh()
+
+
+$.fn.refresh = function() {
+   var m = this.selector.match(/\.filter\([.\S+\d?(\,\s2)]*\)/); // catch filter string
+    var elems = null;
+    if (m != null) { // if no filter, then do the evarage workflow
+        var filter = m[0].match(/\([.\S+\d?(\,\s2)]*\)/)[0].replace(/[\(\)']+/g,'');
+        this.selector = this.selector.replace(m[0],''); // remove filter from selector
+        elems = $(this.selector).filter(filter); // enable filter for it
+    } else {
+        elems = $(this.selector);
+    }
+    this.splice(0, this.length);
+    this.push.apply( this, elems );
+    return this;
+};
+
 //controlla il click su tableFiles
-
-      $("#tableFiles, #tableDiffide" ).on('click', function(){   
-      var $table = this 
-      var $checkedAll = $($table).find(".checkedAll")
-      var $checkboxes = $($table).find("input[type=checkbox]")
-      var $checkSingle = $($table).find(".checkSingle")
-        $($checkedAll).change( function(){
-         if ($($checkedAll).is(':checked')) {
-            $($checkboxes).each(function () {
-                $(this).prop("checked", true);
-            });
-            
-
-          }
-          else
-          {
-            $($checkboxes).each(function () {
-                $(this).prop("checked", false);
-            }); 
-          }
-        var numSelected = $($table).find(".checkSingle:checked").length
-        $("#praticheSelezionate").html(numSelected)
-          
-        })
-
-    //gestisce il change di checkedSingle  
     
-    $($checkSingle).change(function () {
-            if ($(this).is(":checked")){
-            var isAllChecked = 0;
-            $($checkSingle).each(function(){
-              if(!this.checked)
-                 isAllChecked = 1;
-            })              
-            if(isAllChecked == 0){ 
-              $($checkedAll).prop("checked", true); 
-              }     
-          }
-          else {
-            $($checkedAll).prop("checked", false);
-          };
-      var numSelected = $($table).find(".checkSingle:checked").length
-      $("#praticheSelezionate").html(numSelected)
-        });
-   })
+      $("table" ).on('click', function(){  
 
-  }) 
+      var $table = $(this)
+      var $checkAll = $table.find(".checkAll")
+      var $checkSingles = $table.find("input[type=checkbox]").not(".checkAll")
+      var $checkSinglesVisible = $checkSingles.not(":hidden")
+      var $checkSinglesChecked = $table.find("input[type=checkbox]:checked").not(".checkAll")
+      var $notChecked = $checkSingles.not(":checked");
+
+      function printOut(){
+      console.log('table ' + $table.prop("id"))
+      console.log('checkAll ' + $checkAll.prop("checked"))
+      console.log('checkSingles ' + $checkSingles.length)
+      console.log('visibili ' + $checkSinglesVisible.length)
+      console.log('selezionati ' + $checkSinglesChecked.length)
+      console.log('non selezionati ' + $notChecked.length)
+      console.log('button print' + $printId)
+      }
+      
+      //gestisce il change di checkSingle 
+      $checkSingles.change(function () { 
+
+         $("#praticheSelezionate").html($checkSinglesChecked.length)
+         if ($checkSinglesChecked.length == $checkSingles.length){
+             $checkAll.prop("checked",true)
+         }
+         else
+         {
+             $checkAll.prop("checked",false)
+         }
+      $checkSinglesChecked = $table.find("input[type=checkbox]:checked").not(".checkAll")
+      $("#praticheSelezionate").html($checkSinglesChecked.length)
+
+      if ($table.prop("id") == "tableDiffide" && $checkSinglesChecked.length >0){
+          $("#print").prop("disabled", false)
+      }
+      else
+      {
+      console.log($checkSinglesChecked.length)
+          $("#print").prop("disabled", true)
+      }
+      })
+      
+      //gestisce il change di checkAll
+      $checkAll.change(function () {
+        $checkSingles.each(function() {
+             $(this).prop("checked", $checkAll.prop("checked"));
+        })
+          $checkSinglesChecked = $table.find("input[type=checkbox]:checked").not(".checkAll")
+      $("#praticheSelezionate").html($checkSinglesChecked.length)
+
+      if ($table.prop("id") == "tableDiffide" && $checkSinglesChecked.length >0){
+          $("#print").prop("disabled", false)
+      }
+      else
+      {
+      console.log($checkSinglesChecked.length)
+          $("#print").prop("disabled", true)
+      }
+      })
+      
+ 
+      
+      })
+      
+
+   
+      
+   
+
+ // button Filter
+        $('.filterable .btn-filter').click(function(){
+        
+        var $panel = $(this).parents('.filterable'),
+        $filters = $panel.find('.filters input'),
+        $tbody = $panel.find('.table tbody'),
+        $checkboxesChecked = $tbody.find("input[type=checkbox]:checked")
+        $("#praticheSelezionate").html($checkboxesChecked.length)
+        console.log( $checkboxesChecked.length)
+
+        if ($filters.prop('disabled') === true) {
+            $filters.prop('disabled', false);
+            
+        } else {
+            $filters.val('').prop('disabled', true);
+            
+            $tbody.find('.no-result').remove();
+            $tbody.find('tr').show();
+        }
+    });
+/*
+     $('#range').blur(function(e){
+        //Ignore tab key 
+        var code = e.keyCode || e.which;
+        if (code == '9') return;
+        / if esc is pressed we want to clear the value of search bo 
+        if (code == 27 || $(this).val() == '') {
+        $(this).val('');
+        }
+        // Useful DOM data and selectors 
+        var $input = $(this),
+        rangeArray = $input.val().toLowerCase().split("-"),
+        $panel = $input.parents('.filterable'),
+        column = $panel.find('.filters th').index($input.parents('th')),
+        $table = $panel.find('.table'),
+        $rows = $table.find('tbody tr')
+        // filter function ;) 
+        var $filteredRows = $rows.filter(function(){
+            var $t = $(this);
+            for (var i = rangeArray[0]; i < rangeArray[0]; ++i) {
+              if ($t.is(":contains('" +i+ "')")) {
+              return true;
+            }
+        }
+        return false;
+        })
+        // Clean previous no-result if exist 
+        $table.find('tbody .no-result').remove();
+        // Show all rows, hide filtered ones (never do that outside of a demo ! xD) 
+        $rows.show();
+        $filteredRows.hide();
+        // Prepend no-result row if all rows are filtered 
+        if ($filteredRows.length === $rows.length) {
+            $table.find('tbody').prepend($('<tr class="no-result text-center"><td colspan="'+ $table.find('.filters th').length +'">No result found</td></tr>'));
+        }
+    }); 
+*/
+
+    $('.filterable .filters input').not('#range').keyup(function(e){
+        // Ignore tab key 
+        var code = e.keyCode || e.which;
+        if (code == '9') return;
+        // if esc is pressed we want to clear the value of search box
+        if (code == 27 || $(this).val() == '') {
+        $(this).val('');
+        }
+        // Useful DOM data and selectors 
+        var $input = $(this),
+        inputContent = $input.val().toLowerCase(),
+        $panel = $input.parents('.filterable'),
+        column = $panel.find('.filters th').index($input.parents('th')),
+        $table = $panel.find('.table'),
+        $rows = $table.find('tbody tr');
+        // Dirtiest filter function ever ;) 
+        var $filteredRows = $rows.filter(function(){
+            var value = $(this).find('td').eq(column).text().toLowerCase();
+            return value.indexOf(inputContent) === -1;
+        });
+        
+        // Clean previous no-result if exist 
+        $table.find('tbody .no-result').remove();
+        // Show all rows, hide filtered ones    
+        $rows.show();
+        $filteredRows.hide();
+        var praticheFiltrate = $rows.length - $filteredRows.length 
+        $("#praticheVisualizzate").html(praticheFiltrate)
+        //Prepend no-result row if all rows are filtered 
+        if ($filteredRows.length === $rows.length) {
+            $table.find('tbody').prepend($('<tr class="no-result text-center"><td colspan="'+ $table.find('.filters th').length +'">No result found</td></tr>'));
+        }
+    }); 
+
+  }) // close document ready function
 
 
  // chiude il controllo della table      
@@ -207,145 +343,9 @@ $(document).ready(function() {
       });              
 
 
-// close document ready function
-
-  
-
-/*
-//check click on tableDiffide
-
-   $("#tableDiffide").on('click', function(){
-   
-   //manage change on checkedAllDiffide
-      $("#checkedAllDiffide").change(function(){
-        if(this.checked){
-          $(".checkSingleDiffide").each(function(){
-            this.checked=true;
-            $("#print").removeAttr('disabled')
-          })              
-        }else{
-          $(".checkSingleDiffide").each(function(){
-            this.checked=false;
-            $("#print").prop('disabled', true)
-          })              
-        }   
-      });
-      
-
-//manage change on checkedSingleDiffide  
-    $(".checkSingleDiffide").change(function () {
-        if ($(this).is(":checked")){
-           $("#print").removeAttr('disabled')
-           var isAllChecked = 0;
-        $(".checkSingleDiffide").each(function(){
-          if(!this.checked)
-             isAllChecked = 1;
-        })
-        if(isAllChecked == 0){ 
-          $("#checkedAllDiffide").prop("checked", true); 
-        }
-      }
-      else {
-        $("#checkedAllDiffide").prop("checked", false);
-        $("#print").prop('disabled', true)
-      }  
-    });  
-    }); // non si capisce se è la chiusura del Document ready o no
-  */
-
-   
-
-     
 
 
- // button Filter
-        $('.filterable .btn-filter').click(function(){
-        
-        var $panel = $(this).parents('.filterable'),
-        $filters = $panel.find('.filters input'),
-        $tbody = $panel.find('.table tbody');
-        
-        if ($filters.prop('disabled') === true) {
-            $filters.prop('disabled', false);
-            
-        } else {
-            $filters.val('').prop('disabled', true);
-            $tbody.find('.no-result').remove();
-            $tbody.find('tr').show();
-        }
-    });
-    
-     $('#range').blur(function(e){
-        /* Ignore tab key */
-        var code = e.keyCode || e.which;
-        if (code == '9') return;
-        /* if esc is pressed we want to clear the value of search bo */
-        if (code == 27 || $(this).val() == '') {
-        $(this).val('');
-        }
-        /* Useful DOM data and selectors */
-        var $input = $(this),
-        rangeArray = $input.val().toLowerCase().split("-"),
-        $panel = $input.parents('.filterable'),
-        column = $panel.find('.filters th').index($input.parents('th')),
-        $table = $panel.find('.table'),
-        $rows = $table.find('tbody tr')
-        /* filter function ;) */
-        var $filteredRows = $rows.filter(function(){
-            var $t = $(this);
-            for (var i = rangeArray[0]; i < rangeArray[0]; ++i) {
-              if ($t.is(":contains('" +i+ "')")) {
-              return true;
-            }
-        }
-        return false;
-        })
-        /* Clean previous no-result if exist */
-        $table.find('tbody .no-result').remove();
-        /* Show all rows, hide filtered ones (never do that outside of a demo ! xD) */
-        $rows.show();
-        $filteredRows.hide();
-        /* Prepend no-result row if all rows are filtered */
-        if ($filteredRows.length === $rows.length) {
-            $table.find('tbody').prepend($('<tr class="no-result text-center"><td colspan="'+ $table.find('.filters th').length +'">No result found</td></tr>'));
-        }
-    }); 
-  
 
-    $('.filterable .filters input').not('#range').keyup(function(e){
-        /* Ignore tab key */
-        var code = e.keyCode || e.which;
-        if (code == '9') return;
-        //if esc is pressed we want to clear the value of search box
-        if (code == 27 || $(this).val() == '') {
-        $(this).val('');
-        }
-        /* Useful DOM data and selectors */
-        var $input = $(this),
-        inputContent = $input.val().toLowerCase(),
-        $panel = $input.parents('.filterable'),
-        column = $panel.find('.filters th').index($input.parents('th')),
-        $table = $panel.find('.table'),
-        $rows = $table.find('tbody tr');
-        /* Dirtiest filter function ever ;) */
-        var $filteredRows = $rows.filter(function(){
-            var value = $(this).find('td').eq(column).text().toLowerCase();
-            return value.indexOf(inputContent) === -1;
-        });
-        
-        /* Clean previous no-result if exist */
-        $table.find('tbody .no-result').remove();
-        /* Show all rows, hide filtered ones */    
-        $rows.show();
-        $filteredRows.hide();
-        var praticheFiltrate = $rows.length - $filteredRows.length 
-        $("#praticheVisualizzate").html(praticheFiltrate)
-        /* Prepend no-result row if all rows are filtered */
-        if ($filteredRows.length === $rows.length) {
-            $table.find('tbody').prepend($('<tr class="no-result text-center"><td colspan="'+ $table.find('.filters th').length +'">No result found</td></tr>'));
-        }
-    }); 
-   
 
 
     function printDiffide(objDiffide){
@@ -522,7 +522,7 @@ google.script.run
         if (diffide.length > 0){
           for (i=diffide.length-1; i>=0; i--){
           
-                var myCheckbox = '<div vcenter> <label> <input id="checkbox'+(i+1)+'" class="checkSingle" type="checkbox"> </label> </div>'
+                var myCheckbox = '<div vcenter> <label> <input class="checkSingle" type="checkbox"> </label> </div>'
                 tr = $('<tr>');
                 tr.append("<td >" + myCheckbox + "</td>");
                 tr.append("<td id='idDiffida' >" + diffide[i]['ID diffida'] + "</td>");
@@ -562,9 +562,8 @@ google.script.run
           }
           console.log('table diffide created')
           $("#praticheVisualizzate").html(diffide.length)
-          var numSelected = $(this).find(".checkSingle:checked").length
-          console.log('pratiche selezionate ' + numSelected) 
-          $("#praticheSelezionate").html(numSelected)
+          var checkSingleChecked = $(this).find(".checkSingle:checked")
+          $("#praticheSelezionate").html(checkSingleChecked.length)
           var colImportDate = $('#tableDiffide tr td:nth-child(9)')        
           var high = Math.max.apply(Math, colImportDate.map(function(){
              var date = $(this).text()
