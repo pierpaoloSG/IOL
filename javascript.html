@@ -89,15 +89,10 @@ $.fn.refresh = function() {
           $("#print").prop("disabled", true)
       }
       })
-      
- 
-      
+            
       })
       
 
-   
-      
-   
 
  // button Filter
         $('.filterable .btn-filter').click(function(){
@@ -280,24 +275,25 @@ $.fn.refresh = function() {
       var objDiffide = {
         'Data invio':''}
       var diffide = []
-      var checkboxes = $("input.checkSingleDiffide:visible:checked");
-      $(checkboxes).each(function(x){
+      var checkSinglesVisibleChecked = $("input.checkSingle:visible:checked");
+      $(checkSinglesVisibleChecked).each(function(){
             //var selected = $(this).closest('tr').find('td').eq(1).html() 
             if ($(this).closest('tr').find("td").eq(3).html() == ""){
-                var selected = $(this).closest('tr').find('td').eq(1).html()
-                diffide.push(selected)
+                var toPrint = $(this).closest('tr').find('td').eq(1).html()
+                diffide.push(toPrint)
             }
+            
       });
       
       objDiffide.diffide = diffide.reverse()
-      console.log('diffide to print ' + objDiffide.diffide)
+      console.log((objDiffide.diffide).length + ' diffide to print: ' + objDiffide.diffide)
       
       $('#dateModal').modal('show')
       $('#send').on('click', {objDiffide},  function (e) {
         objDiffide['Data invio'] = $("#dataInvio").find("input").val()
         if ($("#checkboxDiffide").is(':checked')){
            var runPrintDiffide = true
-           $("input.checkSingleDiffide").prop('checked', false)
+           //$("input.checkSingleDiffide").prop('checked', false)
             printDiffide(objDiffide)     
             diffide = []
         }
