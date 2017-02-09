@@ -12,21 +12,6 @@ $(document).ready(function() {
 // mini-plug-in che permette l'aggiornamento dei selectors con il metodo refresh es. $selector.refresh()
 
 
-$.fn.refresh = function() {
-   var m = this.selector.match(/\.filter\([.\S+\d?(\,\s2)]*\)/); // catch filter string
-    var elems = null;
-    if (m != null) { // if no filter, then do the evarage workflow
-        var filter = m[0].match(/\([.\S+\d?(\,\s2)]*\)/)[0].replace(/[\(\)']+/g,'');
-        this.selector = this.selector.replace(m[0],''); // remove filter from selector
-        elems = $(this.selector).filter(filter); // enable filter for it
-    } else {
-        elems = $(this.selector);
-    }
-    this.splice(0, this.length);
-    this.push.apply( this, elems );
-    return this;
-};
-
 //controlla il click su tableFiles
     
       $("table" ).on('click', function(){  
@@ -38,55 +23,47 @@ $.fn.refresh = function() {
       var $checkSinglesChecked = $table.find("input[type=checkbox]:checked").not(".checkAll")
       var $notChecked = $checkSingles.not(":checked");
 
-      function printOut(){
-      console.log('table ' + $table.prop("id"))
-      console.log('checkAll ' + $checkAll.prop("checked"))
-      console.log('checkSingles ' + $checkSingles.length)
-      console.log('visibili ' + $checkSinglesVisible.length)
-      console.log('selezionati ' + $checkSinglesChecked.length)
-      console.log('non selezionati ' + $notChecked.length)
-      console.log('button print' + $printId)
-      }
-      
       //gestisce il change di checkSingle 
       $checkSingles.change(function () { 
 
-         $("#praticheSelezionate").html($checkSinglesChecked.length)
-         if ($checkSinglesChecked.length == $checkSingles.length){
-             $checkAll.prop("checked",true)
-         }
-         else
-         {
-             $checkAll.prop("checked",false)
-         }
+         
       $checkSinglesChecked = $table.find("input[type=checkbox]:checked").not(".checkAll")
-      $("#praticheSelezionate").html($checkSinglesChecked.length)
 
       if ($table.prop("id") == "tableDiffide" && $checkSinglesChecked.length >0){
+          console.log($table.prop("id"))
+          console.log($checkSinglesChecked.length)
           $("#print").prop("disabled", false)
+          $("#praticheSelezionate").html($checkSinglesChecked.length)
       }
       else
       {
-      console.log($checkSinglesChecked.length)
+          console.log($table.prop("id"))
+          console.log($checkSinglesChecked.length)
           $("#print").prop("disabled", true)
+          $("#praticheSelezionate").html($checkSinglesChecked.length)
       }
       })
       
       //gestisce il change di checkAll
       $checkAll.change(function () {
         $checkSingles.each(function() {
-             $(this).prop("checked", $checkAll.prop("checked"));
+            $(this).prop("checked", $checkAll.prop("checked"));
         })
-          $checkSinglesChecked = $table.find("input[type=checkbox]:checked").not(".checkAll")
-      $("#praticheSelezionate").html($checkSinglesChecked.length)
-
+      
+      $checkSinglesChecked = $table.find("input[type=checkbox]:checked").not(".checkAll")
+     
       if ($table.prop("id") == "tableDiffide" && $checkSinglesChecked.length >0){
+          console.log($table.prop("id"))
+          console.log($checkSinglesChecked.length)
           $("#print").prop("disabled", false)
+          $("#praticheSelezionate").html($checkSinglesChecked.length)
       }
       else
       {
-      console.log($checkSinglesChecked.length)
+          console.log($table.prop("id"))
+          console.log($checkSinglesChecked.length)
           $("#print").prop("disabled", true)
+          $("#praticheSelezionate").html($checkSinglesChecked.length)
       }
       })
             
@@ -246,14 +223,20 @@ $.fn.refresh = function() {
                  
                   //legge i dati dai files di affido selezionati
                   console.log("files " + JSON.stringify(files))
+                  $('#outputPanelText').empty()
                   google.script.run
                     .withSuccessHandler(onReadDiffide)
                     .withFailureHandler(onError2)
                     .readDiffideFromFiles(files)    
                   return false
           })
-                function onReadDiffide(objDiffideDaInviare){
-                    console.log('dati scritti su sheet')
+                function onReadDiffide(results){
+                    var objDiffideDaInviare = results[0]
+                    var dataImportazioneAffido = results[1]
+                    var erroriImportazioneDiffide = results[2]
+                    var logRateiFattura = results[3]
+                    console.log(logRateiFattura)
+                    //$('#outputPanelText').append(JSON.stringify(erroriImportazioneDiffide))
                     // ricrea la tabella dei files aggiornata 
                     createTableFiles() 
                     // crea la tabella diffide
@@ -287,7 +270,7 @@ $.fn.refresh = function() {
       
       objDiffide.diffide = diffide.reverse()
       console.log((objDiffide.diffide).length + ' diffide to print: ' + objDiffide.diffide)
-      
+      $('#outputPanelText').empty()
       $('#dateModal').modal('show')
       $('#send').on('click', {objDiffide},  function (e) {
         objDiffide['Data invio'] = $("#dataInvio").find("input").val()
@@ -337,9 +320,6 @@ $.fn.refresh = function() {
         $('#confirmModal').modal('hide')
         });
       });              
-
-
-
 
 
 
@@ -509,8 +489,7 @@ google.script.run
       $icon.addClass('glyphicon-repeat')
     var $icon = $( '#import')
       $icon.removeClass('glyphicon-refresh') 
-      $icon.addClass('glyphicon-import')
-      
+      $icon.addClass('glyphicon-import')   
     var diffide = JSON.parse(objAllDiffideDaInviare)
     console.log('DiffideDaInviare ')
     $('#tableDiffide tbody').remove()
@@ -533,7 +512,8 @@ google.script.run
                 }
                     tr.append("<td >" + diffide[i]['Nome file affido'] + "</td>");
                     tr.append("<td >" + diffide[i]['Codice cliente'] + "</td>");
-                    tr.append("<td >" + diffide[i]['Dato fiscale'] + "</td>");
+                    tr.append("<td >" + diffide[i]['Partita IVA'] + "</td>");
+                    tr.append("<td >" + diffide[i]['Codice fiscale'] + "</td>");
                     tr.append("<td >" + diffide[i]['Ragione sociale'] + "</td>");
                     tr.append("<td >" + diffide[i]['Stato'] + "</td>");
                     tr.append("<td >" + moment(diffide[i]['Data importazione']).format("DD/MM/YYYY hh:mm:ss ") + "</td>");

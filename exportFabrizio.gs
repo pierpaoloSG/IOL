@@ -138,9 +138,7 @@ function exportDettagliFatture(objDiffideToExport){
              {
                 var dataFattura = ''
              }
-           
-             
-             
+                        
              fatturaInner = [,,,,,,,]     
              fatturaInner[0] = '' // IDFattura
              fatturaInner[1] = '' // Descrizione

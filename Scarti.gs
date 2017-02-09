@@ -11,10 +11,7 @@
                }
              }
              
-             if (fatturaInRatei == false){}
-
-
-               
+             if (fatturaInRatei == false){}        
              
           }
 */
