@@ -1,5 +1,6 @@
 
 function updateSheets(objDiffideInviate, docFileUrl, docName){
+   // aggiunge le diffide nello sheet diffide inviate
   Logger.log('updateSheetDiffide')
   Logger.log(objDiffideInviate)
   var arrayDiffideDaInviare = sheetDiffideDaInviare.getDataRange().getValues()

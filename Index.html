@@ -42,35 +42,41 @@
    <!--PDFMake-->
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.24/pdfmake.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.24/vfs_fonts.js"></script>
+  
+   <!--SerializeJSON-->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.serializeJSON/2.7.2/jquery.serializejson.js"></script>
+
 
 
   
 </head>
   
 <body onload="start()">
- <div class=jumbotron>     
-<div class="container">
-     <div class="col-sm-12 col-md-12 col-lg-12">     
-      <h3>IOL ver 1.0</h3>
+
+  <div class="container-fluid">
+    <div class=jumbotron>  
+      <h2>GESTIONE AFFIDI IOL ver 1.63 dev del 06_02_2017</h2>
               <!-- panel contenente la tabella con i files-->
+
                 <div id="filesPanel" class="panel panel-primary">
                     <div class="panel-heading">
                         <h3>Files Affidi da importare</h3>
                           <div class="row">
-                               <div class="col col-xs-1">
+                               <div class="btn-group col-sm-12 col-md-12 col-lg-12">
                                    <button id="refreshTableFiles" type="button" class="btn btn-default btn-sm ">
-                                      <span class="glyphicon glyphicon-repeat" style="horizontal-align:left"></span>
+                                      <span  style="horizontal-align:left" class="glyphicon glyphicon-repeat"></span>
                                       <span style="font-size:smaller;">Aggiorna</span>
                                    </button>
-                               </div>
-                                <div class="col col-xs-1">
-                                   <button type="button" id="import" class="btn btn-default btn-sm " >
+                                   <button type="button" id="import" class="btn btn-default btn-sm" disabled >
                                       <span class="glyphicon glyphicon-import"></span>
                                       <span style="font-size:smaller;">Importa</span>
                                    </button>
-                                </div>
+                                   <div class="pull-right" style="font-size: 10px">Files in elenco: <span  id="filesVisible" class="badge">0</span></div> 
+                                   <br>
+                                   <div class="pull-right" style="font-size: 10px">Files selezionati: <span  id="filesChecked"  class="badge">0</span></div> 
+                               </div>
                           </div>
-                    </div>
+                     </div>
                     <div class="panel-body">
                           
                                 <table id="tableFiles" class="table table-striped">
@@ -78,7 +84,7 @@
                                         <tr class='info'>
                                             <label>
                                                 <th>
-                                                    <input id="checkedAll" type="checkbox" value="">
+                                                    <input class="checkAll" type="checkbox" value="">
                                                 </th>
                                             </label>
                                             <th>Nome del file</th>
@@ -95,47 +101,60 @@
                     <div class="panel-footer">
                         <div id="importOutput"></div>
                     </div>
-              </div>
               <!-- panel-->
          </div>
-                  <div class="col-sm-12 col-md-12 col-lg-12">
-              <div  id="outputPanel" class="panel panel-default">
+
+                  <div  id="outputPanel" class="panel panel-default">
                     <div class="panel-heading">
                             <h3>Risultati</h3>
                     </div>
-                       <div id="outputPanelText" class="panel-body">
+                       <div id="outputPanelText" class="panel-body fixed-panel">
                        </div>
                        <div class="panel-footer">
                        </div>
                    </div>
-              </div>
-        </div><!--col-->
-         <div class="col-sm-12 col-md-12 col-lg-12">  
+   
+ 
               <!-- panel contenente la tabella con le diffide -->
                     <div id="diffidePanel" class="panel panel-primary filterable">
                         <div class="panel-heading">
-                        <h3>Diffide importate</h3>
+                          <h3> Diffide importate</h3>
                              <div class="row">
-                                 <div class="col col-xs-1">
+                                 <div class="col-sm-12 col-md-12 col-lg-12 btn-group" ;>
                                     <button id="filterButton" class="btn btn-default btn-sm btn-filter ">
                                        <span class="glyphicon glyphicon-filter"></span>
                                        <span style="font-size:smaller;">Filtra</span>
                                     </button>
-                                 </div>   
-                                 <div class="col col-xs-1">
+                                    <button id="insertExFlusso" type="button" class="btn btn-default btn-sm ">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                        <span style="font-size:smaller;">Inserisci pratica ex-flusso</span>
+                                    </button>
                                     <button id="print" type="button" class="btn btn-default btn-sm " disabled>
                                         <span class="glyphicon glyphicon-print"></span>
                                         <span style="font-size:smaller;">Stampa</span>
                                     </button>     
+                                     <button id="exportDiffide" type="button" class="btn btn-default btn-sm " disabled>
+                                        <span class="glyphicon glyphicon-export"></span>
+                                        <span style="font-size:smaller;">Esporta</span>
+                                    </button>
+                              
+                                    <button id="unDoLast" type="button" class="btn btn-default btn-sm " disabled>
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                        <span style="font-size:smaller;">Elimina ultima importazione</span>
+                                    </button>  
+                                    <div class="pull-right" style="font-size: 10px">Pratiche visualizzate: <span  id="praticheVisible"  class="badge">0</span></div> 
+                         
+                                    <br>
+                                    <div class="pull-right" style="font-size: 10px">Pratiche selezionate: <span  id="praticheChecked"  class="badge">0</span></div> 
                                 </div>
-                             </div>
+                            </div>
                        </div>
-                        <div class="panel-body">
-                                    <table id="tableDiffide" class="table table-striped table-list">
-                                        <thead>
-                                            <tr class="filters info">   
+                        <div class="panel-body ">
+                                    <table id="tableDiffide" class="table table-scroll table-striped table-list">
+                                        <thead >
+                                            <tr class=" filters info" >   
                                                 <th>
-                                                    <input id="checkedAllDiffide" class="checkedAllDiffide col-xs-1" type="checkbox" value="">
+                                                    <input id="checkAll" type="checkbox" class="checkAll"  >
                                                 </th> 
                                                 <th>
                                                     <input type="text" class="form-control " class="col-xs-1" placeholder="ID diffida" disabled>
@@ -143,10 +162,10 @@
                                                 <th>
                                                     <input type="text" class="form-control" class="col-xs-1"  placeholder="Rif prat"   disabled>
                                                 </th>
-                                                <!--
+                                             
                                                 <th>
-                                                     <input type="text" class="form-control" class="col-xs-1"  placeholder="Tipologia flusso"   disabled>
-                                                </th-->
+                                                     <input type="text" class="form-control" class="col-xs-1"  placeholder="Tipologia pratica"   disabled>
+                                             
                                                 <th>
                                                      <input type="text" class="form-control" class="col-xs-1"  placeholder="Nome file affido"   disabled>
                                                 </th>
@@ -154,7 +173,10 @@
                                                     <input type="text" class="form-control" class="col-xs-1"  placeholder="Codice cliente" disabled>
                                                 </th>
                                                 <th>
-                                                    <input type="text" class="form-control" class="col-xs-1"  placeholder="Dato fiscale" disabled>
+                                                    <input type="text" class="form-control" class="col-xs-1"  placeholder="Partita IVA" disabled>
+                                                </th>
+                                                <th>
+                                                    <input type="text" class="form-control" class="col-xs-1"  placeholder="Codice fiscale" disabled>
                                                 </th>
                                                 <th>
                                                     <input type="text" class="form-control" class="col-xs-1"  placeholder="Ragione sociale" disabled>
@@ -181,19 +203,20 @@
                         </div>
                         <div class="panel-footer">
                               <div id="printOutput"></div>
-                        </div>
-           </div>     
+                
+                        </div>  
            <!-- panel-->
          <!--panel risultati-->
-
-   </div>
-</div> <!-- container-->
-
+         </div>
+         </div>
+     </div>
 </body>
   <?!= include('styleCSS'); ?>
   <?!= include('javascript'); ?>
   <?!= include('dateModal'); ?>
-  
+  <?!= include('exFlussoModal'); ?>
+  <?!= include('confirmModal'); ?>
+
 </html>
 <script>
 $(function () {

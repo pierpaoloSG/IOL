@@ -1,7 +1,9 @@
 <style>
 
-.panel {
-    overflow: auto;
+
+paragraph
+{
+font-size: 12px;
 }
 
 input[type="text"]
@@ -9,19 +11,31 @@ input[type="text"]
     font-size: 12px;
 }
 
-.table {
-     
-     font-size: 10px;
-     vertical-align: middle;
-
-}
-
 
 .table > tbody > tr > td {
        font-size: 10px;
-       vertical-align: middle;
+       vertical-align: middle;      
 }
 
+
+
+#filesPanel > div.panel-body {
+  overflow-y:scroll;
+  height:200px;
+}
+#diffidePanel > div.panel-body {
+  overflow-y:scroll;
+  height:400px;
+}
+
+.fixed-panel {
+  min-height: 20;
+  max-height: 20;
+  overflow-y: scroll;
+}
+
+
+buttonDiffide {
 
 .filterable {
     margin-top: 15px;
@@ -48,118 +62,6 @@ input[type="text"]
 }
 
 
-/* seo friendly tables */
- .div-table {
-    display: table;
-    /* Defines a Table */
-    font-size: 14px;
-    border-bottom: 1px solid #dddddd;
-    color: #8d8d8d;
-    margin: 0;
-    width: 100%;
-}
-.table-container {
-    display: table;
-    width: 100%;
-}
-.table-head {
-    display: table-header-group;
-    /* Defines a table header group */
-    font-weight: 600 !important;
-    text-align: center;
-    border: solid 1px #ddd;
-    color: #333;
-    background: rgb(242, 242, 242);
-    font-size: inherit;
-    vertical-align: middle;
-}
-.table-head .column {
-    /* Column inside the table-head */
-    background: #f2f2f2;
-    color: #7d7d7d;
-    border: solid 1px #ddd;
-}
-.table-row {
-    display: table-row;
-    /* Defines a table row */
-    padding: 3px 6px;
-    color: #333;
-    border-collapse: collapse;
-    text-align: center;
-    vertical-align: middle;
-}
-.table-row .column:nth-child(1) {
-    /* First column in a row */
-    border-left: 1px solid #eeeeee;
-}
-.table-row:last-child .column {
-    /* column in a last row */
-    border-bottom: none;
-}
-.table-row:hover {
-    background: #f9f9f9;
-}
-.column {
-    display: table-cell;
-    /* Defines a table cell */
-    padding: 8px 3px;
-    color: #333;
-    border-bottom: 1px solid #eeeeee;
-    border-right: 1px solid #eeeeee;
-    vertical-align:middle;
-}
-/* Responsive table */
- @media all and (max-width:768px) {
-    .div-table, .table-row, .column, .column:before {
-        display: block;
-        /* Converts a table, table row, table column and table column:before into a block element */
-    }
-    .div-table, .table-row .column:last-child {
-        border-bottom: none;
-    }
-    .table-head {
-        position: absolute;
-        /* Hides table head but not using display none */
-        top: -1000em;
-        left: -1000em;
-    }
-    .table-row {
-        border: 1px solid #eeeeee;
-        margin: 20px 0;
-    }
-    .table-row .column {
-        border-right:none;
-        text-align: left;
-    }
-    .table-row .column:nth-child(1) {
-        /* first column of the row */
-        border-left: none;
-        border-right: none;
-    }
-    .table-row .column:last-child {
-        /* last column of the row */
-        border-right: none;
-    }
-    .table-row:last-child .column, .column {
-        /* Column in the last row and column */
-        border-bottom: 1px solid #eeeeee;
-    }
-    .table-row:hover {
-        background: #fff;
-    }
-    .column:before {
-        /* prints the value of data-label attribute before the column data */
-        font-weight: bold;
-        padding-right: 20px;
-        font-size: 12px;
-        content:"" attr(data-label)"";
-        /* call the attribute value of data-label and adds a string // */
-    }
-    .column:hover {
-        background: #f9f9f9;
-    }
-}
- 
 
 /* checkbox aspect */
  input[type="checkbox"]:not(:checked),
@@ -174,6 +76,7 @@ input[type="text"]
  box-shadow: inset 0 1px 3px rgba(0,0,0,0);
  }
  
+/* loader */
 .glyphicon-refresh-animate {
    -webkit-animation-name: rotateThis;
    -webkit-animation-duration: 2s;
