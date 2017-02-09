@@ -16,7 +16,7 @@ function exportTestataPratiche(objDiffideToExport){
 
   for (var i in objDiffideToExport)  {
   
-    testata = [,,,,,,,,,,,,,]
+    testata = []
     testata[0] = 0 // IDAccount
     testata[1] = '' // Titolo
     testata[2] = '' // Nome
@@ -30,8 +30,8 @@ function exportTestataPratiche(objDiffideToExport){
     testata[10] = objDiffideToExport[i]['Riferimento pratica'] + '/' + objDiffideToExport[i]['Tipologia flusso']
     testata[11] = objDiffideToExport[i]['Data importazione'] // affido del (viene esportato su google doc in formato data)
     testata[12] = objDiffideToExport[i]['Codice cliente'] // CodiceCliente
-    testata[13] = objDiffideToExport[i]['Dato fiscale'] // CodiceFiscale
-    testata[14] = '' // Partita IVA
+    testata[13] = objDiffideToExport[i]['Codice fiscale'] // CodiceFiscale
+    testata[14] = objDiffideToExport[i]['Partita IVA'] // CodiceFiscale
     testata[15] = 9 // IDAccountStatus
     testata[16] = '' // StatoCamerale
     testata[17] = objDiffideToExport[i]['Provenienza indirizzo'] // ProvenienzaIndirizzo
@@ -82,7 +82,7 @@ function exportTestataPratiche(objDiffideToExport){
     
     lettere  = [,,,,]
     lettere[0] = 'in uscita' // Tipologia
-    lettere[1] = '#' + objDiffideToExport[i]['Data invio'] + '#' // CodiceFiscale // Data
+    lettere[1] = '#' + objDiffideToExport[i]['Data invio'] + '#' // Data //
     lettere[2] = 'Inviata' // Status
     lettere[3] = objDiffideToExport[i]['Codice cliente'] // CodiceCliente
 

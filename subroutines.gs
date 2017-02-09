@@ -211,7 +211,7 @@ Logger.log(ssAffido.getUrl())
          'Nome file affido': nomeFileAffido,
          'URL file affido': URLFileAffido,
          'Codice cliente': String(objCasiNoFatture[i].codcliente),
-         'Partita IVA': String(objCasiNoFatture[i].datoFiscale), // verrà considerato come Partita IVA
+         'Dato fiscale': String(objCasiNoFatture[i].datoFiscale), // verrà controllato per individuare se CF o PIVA
          'Ragione sociale': String(objCasiNoFatture[i].ragioneSociale),
          'Indirizzo': objCasiNoFatture[i].indirizzoResidenza,
          'CAP': String(objCasiNoFatture[i].capResidenza),
@@ -224,6 +224,22 @@ Logger.log(ssAffido.getUrl())
          'Stato': 'Importata'
        
      }
+     Logger.log('Dato fiscale ' + objDiffideDaImportare[i]['Codice cliente'])
+     Logger.log('Dato fiscale ' + objDiffideDaImportare[i]['Dato fiscale'])
+     var CF = ControllaCF(objDiffideDaImportare[i]['Dato fiscale'])
+     var PIVA = ControllaPIVA(objDiffideDaImportare[i]['Dato fiscale'])
+     
+     if (PIVA){ 
+       objDiffideDaImportare[i]['Codice fiscale'] = objDiffideDaImportare[i]['Dato fiscale']
+       objDiffideDaImportare[i]['Partita IVA'] = objDiffideDaImportare[i]['Dato fiscale']
+     }
+     else
+     if (CF){
+        objDiffideDaImportare[i]['Codice fiscale'] = objDiffideDaImportare[i]['Dato fiscale']
+        objDiffideDaImportare[i]['Partita IVA'] = ''
+     }
+       
+     
      // cerca info camerali di Casi No Fatture    
      // ATTENZIONE il match è effettuato  tra il dato fiscale di CASI NO FATTURE e partita IVA o Codice FiscaLE di INFO VISURE CAMERALI
      // in quanto il codice cliente su Visure Camerali non corrisponde

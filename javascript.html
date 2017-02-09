@@ -270,7 +270,8 @@ $(document).ready(function() {
       
       objDiffide.diffide = diffide.reverse()
       console.log((objDiffide.diffide).length + ' diffide to print: ' + objDiffide.diffide)
-      $('#outputPanelText').empty()
+      
+      //$('#outputPanelText').empty() // svuota il pannello risultati
       $('#dateModal').modal('show')
       $('#send').on('click', {objDiffide},  function (e) {
         objDiffide['Data invio'] = $("#dataInvio").find("input").val()
