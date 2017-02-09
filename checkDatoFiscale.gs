@@ -17,7 +17,7 @@ function ControllaCF(cf)
 	cf = cf.toUpperCase();
 	if( cf == '' )  return '';
 	if( ! /^[0-9A-Z]{16}$/.test(cf) )
-		return "Il codice fiscale deve contenere 16 tra lettere e cifre.";
+		return "";
 	var map = [1, 0, 5, 7, 9, 13, 15, 17, 19, 21, 1, 0, 5, 7, 9, 13, 15, 17,
 		19, 21, 2, 4, 18, 20, 11, 3, 6, 8, 12, 14, 16, 10, 22, 25, 24, 23];
 	var s = 0;
@@ -34,9 +34,8 @@ function ControllaCF(cf)
 	}
 	var atteso = String.fromCharCode(65 + s % 26);
 	if( atteso != cf.charAt(15) )
-		return "Il codice fiscale non è valido:\n" +
-			"il codice di controllo non corrisponde.\n";
-	return true;
+		return ""; // il dato fornito non rispetta i formalismi del CF
+	return cf;
 }
 
 
@@ -57,7 +56,7 @@ function ControllaPIVA(pi)
 {
 	if( pi == '' )  return '';
 	if( ! /^[0-9]{11}$/.test(pi) )
-		return "La partita IVA deve contenere 11 cifre.";
+		return ""
 	var s = 0;
 	for( i = 0; i <= 9; i += 2 )
 		s += pi.charCodeAt(i) - '0'.charCodeAt(0);
@@ -68,7 +67,6 @@ function ControllaPIVA(pi)
 	}
 	var atteso = ( 10 - s%10 )%10;
 	if( atteso != pi.charCodeAt(10) - '0'.charCodeAt(0) )
-		return "La partita IVA non è valida:\n" +
-			"il codice di controllo non corrisponde.\n";
-	return true;
+		return ""  //il dato fornito non rispetta i formalismi della PIVA;
+	return pi;
 }

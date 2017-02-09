@@ -15,7 +15,7 @@ function exportTestataPratiche(objDiffideToExport){
   
 
   for (var i in objDiffideToExport)  {
-  
+
     testata = []
     testata[0] = 0 // IDAccount
     testata[1] = '' // Titolo

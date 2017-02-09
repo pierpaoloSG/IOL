@@ -231,12 +231,18 @@ $(document).ready(function() {
                   return false
           })
                 function onReadDiffide(results){
+
                     var objDiffideDaInviare = results[0]
                     var dataImportazioneAffido = results[1]
-                    var erroriImportazioneDiffide = results[2]
+                    var objErrors = results[2]
                     var logRateiFattura = results[3]
-                    console.log(logRateiFattura)
-                    //$('#outputPanelText').append(JSON.stringify(erroriImportazioneDiffide))
+                    var outputMessage
+                    
+                      for (var i=0; i<objErrors.length; i++){
+                           outputMessage =+ objErrors[i] + "\n"
+                      }
+           
+                    //$('#outputPanelText').append(outputMessage)
                     // ricrea la tabella dei files aggiornata 
                     createTableFiles() 
                     // crea la tabella diffide
