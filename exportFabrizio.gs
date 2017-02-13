@@ -1,9 +1,54 @@
 
-function exportTestataPratiche(objDiffideToExport){
+function exportDiffide(objDiffide){
+/*
+  var  objDiffideToExport = objData.filter(function (el) {
+    return el['Tipologia flusso'] != 'IOL' 
+  });
+*/  
+Logger.log('Export Diffide')
+Logger.log(objDiffide)
+
+
+//var dataImportazione = Utilities.formatDate(new Date(), 'CET', 'dd/MM/YYYY HH.mm')
+var dataExport = Utilities.formatDate(new Date(), 'CET', 'dd/MM/YYYY HH.mm.ss')
+
+var arrayDiffideDaInviare = objDiffide['diffide']
+Logger.log('arrayDiffideDaInviare ' + arrayDiffideDaInviare)
+
+
+var lastRow = sheetDiffideDaInviare.getLastRow()
+var lastCol = sheetDiffideDaInviare.getLastColumn()
+var range = sheetDiffideDaInviare.getRange(2,1,lastRow, lastCol)
+
+var data = sheetDiffideDaInviare.getDataRange().getValues()
+var objDiffideDaInviare = ObjApp.rangeToObjectsNoCamel(data)
+Logger.log(objDiffideDaInviare)
+var objDataRow 
+var count = 0
+var objData = []
+   
+Logger.log(arrayDiffideDaInviare)
+for (var i=0; i<arrayDiffideDaInviare.length; i++)  {
+    for (var record in objDiffideDaInviare){
+      if (objDiffideDaInviare[record]['ID diffida'] == arrayDiffideDaInviare[i] ){
+            // crea l'oggetto per la diffida trovata
+            objDataRow = objDiffideDaInviare[record]
+            //objDataRow['Data importazione'] = dataImportazione   
+            objDataRow['Data esportazione'] = dataExport                                                  
+            objDataRow['Stato'] = 'Esportata'
+      }
+  }
+  count++
+  Logger.log(count)
+  objData.push(objDataRow)
+}
+
+Logger.log('numero diffide da esportare ' + objData.length)
+Logger.log('diffide da esportare ')
+Logger.log(objData)
   // esporta le diffide da inviare su testate pratiche per Fabrizio
   Logger.log('exportTestataPratiche')
-  
-  
+ var objDiffideToExport = objData
   Logger.log(objDiffideToExport)
   var testataOuter = []
   var addressOuter = []
@@ -11,8 +56,6 @@ function exportTestataPratiche(objDiffideToExport){
   var lettere = []
   var testata, address, lettere
   var rows
-   
-  
 
   for (var i in objDiffideToExport)  {
 
@@ -49,7 +92,10 @@ function exportTestataPratiche(objDiffideToExport){
     sheetExportTestataPratiche.getRange(2,1,rows,headers.length).clearContent()
     sheetExportTestataPratiche.getRange(2,1,testataOuter.length,headers.length).setValues(testataOuter)
     
-    
+    //var urlMySQL = 'jdbc:mysql://<host-ip>:3306/<database>';
+    var urlMySQL = 'jdbc:mysql://hostingmysql330.register.it:3306/scenariopubblico_com_daniele' ; 
+    var db = ObjDB.open( urlMySQL, "SFN1_danielez","Akluhdsab6874");
+    //ObjDB.insertRow( db, 'testata pratiche', testataOuter )
     // export Recapiti
     
     address  = [,,,,,,,]
@@ -76,7 +122,7 @@ function exportTestataPratiche(objDiffideToExport){
 
     sheetExportRecapiti.getRange(2,1,testataOuter.length,headers.length).setValues(addressOuter)
     
-    
+    //ObjDB.insertRow( db, 'recapiti', addressOuter )
     
     // export Lettere
     
@@ -101,16 +147,11 @@ function exportTestataPratiche(objDiffideToExport){
     sheetExportLettere.getRange(2,1,rows,headers.length).clearContent()
     sheetExportLettere.getRange(2,1,lettereOuter.length,headers.length).setValues(lettereOuter)    
   }
-  
+  //ObjDB.insertRow( db, 'lettere', lettereOuter )
   removeEmptyRows(sheetExportTestataPratiche)
   removeEmptyRows(sheetExportLettere)
   removeEmptyRows(sheetExportRecapiti)
-  exportDettagliFatture(objDiffideToExport)
-  return 
-  
-}
-
-function exportDettagliFatture(objDiffideToExport){
+ 
   // esporta i dettagli fatture per Fabrizio
   Logger.log('exportDettagliFatture')
   
@@ -142,7 +183,7 @@ function exportDettagliFatture(objDiffideToExport){
              fatturaInner = [,,,,,,,]     
              fatturaInner[0] = '' // IDFattura
              fatturaInner[1] = '' // Descrizione
-             fatturaInner[2] = fattureSheetFiltered[j]['Importo scoperto']
+             fatturaInner[2] = fattureSheetFiltered[j]['Totale importi fatture']
              fatturaInner[3] = dataFattura // dataFattura
              fatturaInner[4] = fattureSheetFiltered[j]['Numero fattura'] // NumeroFattura
              fatturaInner[5] = 0 // IDAccount
@@ -165,10 +206,13 @@ function exportDettagliFatture(objDiffideToExport){
       rows= data.length-1
     }
   sheetExportDettagliFatture.getRange(2,1,rows,headers.length).clearContent()
+  Logger.log('fattureOuter')
   Logger.log(fattureOuter)
   sheetExportDettagliFatture.getRange(2,1,fattureOuter.length,headers.length).setValues(fattureOuter)
   removeEmptyRows(sheetExportDettagliFatture)
-  return 
+  //ObjDB.insertRow( db, 'dettagli fatture', fattureOuter )
+  var results = [objDiffideToExport.length, urlExportTestataPratiche,urlExportRecapiti,urlExportLettere,urlExportDettagliFatture]
+  return results
 }
   
 

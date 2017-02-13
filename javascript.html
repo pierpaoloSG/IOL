@@ -77,19 +77,26 @@ $(document).ready(function(){
       var $checkSingles = $table.find("input[type=checkbox]").not(".checkAll")
       var $checkSinglesVisible = $checkSingles.not(":hidden")
       var $checkSinglesChecked = $table.find("input[type=checkbox]:checked").not(".checkAll")
+      var $checkSinglesCheckedVisible = $checkSinglesChecked.not(":hidden")
       var $notChecked = $checkSingles.not(":checked");
-
+      
+      
+      //*****************************************
       //gestisce il change di checkSingle 
+      
       $checkSingles.change(function () { 
       $checkSinglesChecked = $table.find("input[type=checkbox]:checked").not(".checkAll")
       $checkSinglesVisible = $checkSingles.not(":hidden")
       if ($checkSinglesChecked.length >0){
           $("#print").prop("disabled", false)
+          $("#export").prop("disabled", false)
       }
       else
       {
           $("#print").prop("disabled", true) 
+          $("#export").prop("disabled", true)
       }
+      var $checkSinglesCheckedVisible = $checkSinglesChecked.not(":hidden")
       $("#praticheChecked").html($checkSinglesCheckedVisible.length)
       
       
@@ -103,20 +110,24 @@ $(document).ready(function(){
       
       })
       
+      //*****************************************
       //gestisce il change di checkAll
       $checkAll.change(function () {
       $checkSingles.each(function() {
             $(this).prop("checked", $checkAll.prop("checked"));
         })
       
-      $checkSinglesChecked = $table.find("input[type=checkbox]:checked").not(".checkAll")
+      var  $checkSinglesChecked = $table.find("input[type=checkbox]:checked").not(".checkAll")
+
      
       if ( $checkSinglesChecked.length >0){
           $("#print").prop("disabled", false)
+          $("#export").prop("disabled", false)
       }
       else
       {
           $("#print").prop("disabled", true)
+          $("#export").prop("disabled", true)
        
       }
 
@@ -125,8 +136,6 @@ $(document).ready(function(){
             
       })
       
-      
-
  // button Filter
         $('.filterable .btn-filter').click(function(){
         
@@ -205,7 +214,7 @@ $(document).ready(function(){
       createTableFiles()
 
   });
-  
+
    $('#import').on('click', function (e) {
               console.log('import clicked')
               // le checkbox non contengono l'attributo require, quindi il controllo viene fatto qui !
@@ -276,6 +285,7 @@ $(document).ready(function(){
                  }         
  
 
+//********************************************************
   $('#print').on('click', function (e) {
      
       var objDiffide = {
@@ -311,45 +321,8 @@ $(document).ready(function(){
 
       })
  })
- 
- 
-  $('#insertExFlusso').on('click', function (e) {
-
-      $('#exFlussoModal').modal('show');
-      $('#formExFlusso').validator()
-      console.log('shown modal')
-       $('#formExFlusso').on('submit', function(e){
-         $('#exFlussoModal').modal('hide')
-         console.log('hidden')
-         var objExFlusso =   $('#formExFlusso').serializeJSON()
-         sendExFlusso(objExFlusso)
-         return false
-       }); 
-      })
-     
-
-    $('#unDoLast').on('click', function (e) {
-      var dates = []
-      var colImportDate = $('#tableDiffide tr td:nth-child(10)') 
-      var lastImport = Math.max.apply(Math, colImportDate.map(function(){
-            var date = $(this).text()
-            dates.push(date)
-      return $(this).text()
-      }))
-      var lastImportDate = dates.reduce(function (a, b) { return a > b ? a : b; })
-      $('#confirmModal').modal('show');
-        $('#confirmOk').click(function(){
-        console.log(lastImportDate)
-        undoLastImport(lastImportDate)
-        $('#confirmModal').modal('hide')
-        });
-      });              
-
-
-
-
-    function printDiffide(objDiffide){
-      console.log('printDiffide ')
+  function printDiffide(objDiffide){
+  console.log('printDiffide ')
       var $icon = $('#print')
         $icon.removeClass('glyphicon-print')
         $icon.addClass('glyphicon-refresh')
@@ -383,43 +356,108 @@ $(document).ready(function(){
         console.log(err)
         $('#outputPanelText').append('Non è stato possibile stampare le diffide selezionate: ' + err)
       }
-                 
-       function printLabels(objDiffide){
-      console.log('printDiffide')
-      //var objDiffide = JSON.parse(JSONObjDiffide)
+ 
+ //********************************************************
+ 
+  $('#insertExFlusso').on('click', function (e) {
+
+      $('#exFlussoModal').modal('show');
+      $('#formExFlusso').validator()
+      console.log('shown modal')
+       $('#formExFlusso').on('submit', function(e){
+         $('#exFlussoModal').modal('hide')
+         console.log('hidden')
+         var objExFlusso =   $('#formExFlusso').serializeJSON()
+         sendExFlusso(objExFlusso)
+         return false
+       }); 
+      })
+ 
+//********************************************************************* 
+  
+  $('#export').on('click', function (e) {
+     console.log('export Diffide')
+      var objDiffide = {
+        'Data esportazione':''}
+      var diffide = []
+      //var checkSinglesVisibleChecked = $("input.checkSingle:visible:checked");
+      // var noExported = $(this).closest('tr').find('td').eq(9).html() 
+      var $rows = $('#tableDiffide tr').not('thead tr')
+      var noExported = $rows.filter(function() {
+          return $rows.find('td').eq(9).html()=='Inviata';
+      });
+      console.log("noExported " + noExported.length)
+      $(noExported).each(function(){
+            var parts = $(this).closest('tr').find('td').eq(2).html().split("/");
+            var flusso = parts[parts.length - 1]; // Or parts.pop();
+            if (flusso != "IOL"){
+                var toExport = $(this).closest('tr').find('td').eq(1).html()
+                diffide.push(toExport)
+            }  
+      });
+      
+      objDiffide.diffide = diffide.reverse()
+      console.log((objDiffide.diffide).length + ' diffide to export: ' + objDiffide.diffide)
+      exportDiffide(objDiffide)
+      })
+ 
+ function exportDiffide(objDiffide){
+  console.log('exportDiffide ')
+      var $icon = $('#export')
+        $icon.removeClass('glyphicon-export')
+        $icon.addClass('glyphicon-refresh')
+        $icon.addClass('glyphicon-refresh-animate')
       google.script.run
-      .withSuccessHandler(onPrintedLabels)
-      .withFailureHandler(onErrorPrintingLabels)
-      .retrieveAddresses(objDiffide)    
-      showLoader()
+      .withSuccessHandler(onExportedDiffide)
+      .withFailureHandler(onErrorExporting)
+      .exportDiffide(objDiffide)    
       return false
     }
       
-      function onPrintedLabels(results){   
-       console.log('labels printed')
-       var $icon = $('#print')
-       $icon.removeClass('glyphicon-refresh')
-       $icon.removeClass('glyphicon-refresh-animate')
-       $icon.addClass('glyphicon-print')
+      function onExportedDiffide(results){   
+         console.log(results)
+        console.log('diffide exported')
+        var $icon = $('#print')
+        $icon.removeClass('glyphicon-refresh')
+        $icon.removeClass('glyphicon-refresh-animate')
+        $icon.addClass('glyphicon-export')
         var outputMessage
-        var resultDate = moment().format("dd/MM/YYYY h:mm:ss ")
-        if (results[0]>1){
-           resultMessage = results[0] + ' etichette correttamente stampate sul seguente file: \n'
-        }
-        else{
-           resultMessage = results[0] + ' etichetta correttamente stampata sul seguente documento: \n'
-        }
-        outputMessage = resultDate + ' - ' + resultMessage + '<a href="'+ results[1]+'" target="_blank">' +results[2]+ '</a><br>'
+        var resultDate = moment().format("DD/MM/YYYY h:mm:ss ")
+
+           var resultMessage = (results == 1) ? ' diffida correttamente esportata ':' diffide correttamente esportate ' 
+           outputMessage = "<p>sui seguenti files: \n" +  "<a href='" + results[1] + "' target='_blank'>Testata Pratiche</a><br>"
+           //outputMessage += resultDate + "\n Dettagli fatture: <a href='" +results[3]+"' target='_blank'>" + results[4]+ "</a><br>"
+           //aggiorna la tabella diffide
+           console.log(outputMessage)
         $('#outputPanelText').append(outputMessage)
       }
       
-      function onErrorPrintingLabels(err){
+      function onErrorExporting(err){
         console.log(err)
-        $('#printOutput').append('Non è stato possibile stampare le etichette per le diffide selezionate')
+        $('#outputPanelText').append('Si è verificato un errore in fase di esportazione delle diffide: ' + err)
       }
-     $('#range').blur(function(e){
-        var range = $('#range').val()
-     });
+ 
+ 
+ //**********************************************************************
+    $('#unDoLast').on('click', function (e) {
+      var dates = []
+      var colImportDate = $('#tableDiffide tr td:nth-child(10)') 
+      var lastImport = Math.max.apply(Math, colImportDate.map(function(){
+            var date = $(this).text()
+            dates.push(date)
+      return $(this).text()
+      }))
+      var lastImportDate = dates.reduce(function (a, b) { return a > b ? a : b; })
+      $('#confirmModal').modal('show');
+        $('#confirmOk').click(function(){
+        console.log(lastImportDate)
+        undoLastImport(lastImportDate)
+        $('#confirmModal').modal('hide')
+        });
+      });              
+
+     
+//*************************************************************************************                
 
 
 function createTableFiles(){
@@ -500,6 +538,8 @@ console.log('createTableFiles')
 }
 
 
+//********************************************************
+
 // Crea la TableDiffide
 
 function createTableDiffide(){  
@@ -557,13 +597,22 @@ google.script.run
                 {
                      tr.append("<td></td>");
                 }
-                if (diffide[i]['Data invio']!='') {
+                if (diffide[i]['Data esportazione']!='') {
                      tr.append("<td>" + moment(diffide[i]['Data invio']).format("DD/MM/YYYY") + "</td>");
                 }
                 else
                 {
                      tr.append("<td></td>");
                 }
+                
+                 if (diffide[i]['Data invio']!='') {
+                     tr.append("<td >" + moment(diffide[i]['Data esportazione']).format("DD/MM/YYYY hh:mm:ss ") + "</td>");
+                }
+                else
+                {
+                     tr.append("<td></td>");
+                }
+                 
                
                 $('#tableDiffide').append(tr);  
           }
@@ -580,7 +629,6 @@ google.script.run
         else
         {
            $('#tableDiffide tbody').prepend($('<tr class="no-result text-center"><td colspan="">No result found</td></tr>'));
-           console.log($('#tableDiffide tbody'))
         }
  }
 
@@ -589,7 +637,7 @@ function onErrorImporting(err){
      console.log(err)
 }
 
-//**************************
+//*********************************************
 //sendExFlusso - inserisce exFlusso
 
 function sendExFlusso(objExFlusso){

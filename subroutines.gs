@@ -87,13 +87,15 @@ Logger.log(ssAffido.getUrl())
  var sheet = ssAffido.getSheetByName('CASI FATTURE')
  var objCasiFatture = grabObjectFromSheet(sheet)
 
+
  var sheet = ssAffido.getSheetByName('VISURA CAMERALE CUSTOMER')
  var objVisureCamerali = grabObjectFromSheet(sheet)
  Logger.log(objVisureCamerali)
  
  var newRiferimentoPratica
  var offsetRiferimentoPratica
-
+ var headersFatture = sheetDettaglioFatture.getDataRange().getValues()[0]
+ 
  //crea array di oggetti  objDiffideDaInviare
  
  // inizia con Casi NO Fatture
@@ -135,7 +137,8 @@ Logger.log(ssAffido.getUrl())
  var lastColDettaglioFatture = sheetDettaglioFatture.getLastColumn()
  Logger.log('lastColDettaglioFatture ' + lastColDettaglioFatture)
  var logRateiFattura = []
-     
+
+ //*******************************************    
  // ciclo i (objCasiNoFatture)
  for (var i=0; i<objCasiNoFatture.length; i++){
       tipoFlusso = '***'
@@ -248,21 +251,7 @@ Logger.log(ssAffido.getUrl())
      Logger.log(objDiffideDaImportare[i]['Partita IVA'])
      
     
-     // versione precedente
-     /*
-     for (var j in objVisureCamerali){
-           if (objCasiNoFatture[i].datoFiscale === objVisureCamerali[j].piva || objCasiNoFatture[i].datoFiscale === objVisureCamerali[j].codiceFiscale){  
-                 objDiffideDaImportare[i]['Indirizzo'] = objVisureCamerali[j].indirizzo
-                 objDiffideDaImportare[i]['CAP'] = objVisureCamerali[j].cap
-                 objDiffideDaImportare[i]['Comune'] = objVisureCamerali[j].comune
-                 objDiffideDaImportare[i]['Provincia'] = objVisureCamerali[j].provincia
-                 objDiffideDaImportare[i]['Telefono'] = String(objCasiNoFatture[i].telefono)
-                 objDiffideDaImportare[i]['Provenienza indirizzo'] = 'Info camerali'  
-                 //objDiffideDaImportare[i]['Data importazione'] = dataImportazione
-                 //objDiffideDaImportare[i]['Stato'] = 'Importata'  
-           } 
-     }
-     */
+
      // cerca info camerali di Casi No Fatture    
      // ATTENZIONE il match è effettuato  tra il dato fiscale di CASI NO FATTURE e partita IVA o Codice FiscaLE di INFO VISURE CAMERALI
      // in quanto il codice cliente su Visure Camerali non corrisponde
@@ -288,100 +277,115 @@ Logger.log(ssAffido.getUrl())
     // inizializza variabili relative a fatture
     var progressivoFattura = 0
     var fatturaInRatei = false
-    var importoTotaleFatture = 0
+    var totaleScadutoFatture, 
+        totaleAScadereFatture,
+        totaleScopertoFatture,
+        totaleImportiFatture
     
     //crea array interno per la proprietà fatture
     // filtra i objCasiFatture in base a codice cliente
     Logger.log('length objCasiFatture ' + objCasiFatture.length)
     var fatture = []
-    
-    /*
-    for (var z=0; z<objCasiFatture.length; z++){
-          rifPraticaFlusso = newRiferimentoPratica + "/" + tipoFlusso
-          // inizializza il progressivo fattura
-          Logger.log('codClienteFatture ' + objCasiFatture[z].codcliente + "--->" + 'codClienteDiffide ' + objCasiNoFatture[i].codcliente)
-          if (objCasiFatture[z].codcliente === objCasiNoFatture[i].codcliente){
-               progressivoFattura++
-               var dataImportazioneFattura = dataImportazione
-               if (objCasiFatture[z].dataFattura){
-                 dataFattura = objCasiFatture[z].dataFattura        
-                 dateTimeFattura = new Date(dataFattura).getTime() // non attribuisce un valore cronologicamente congruente alla data !!!
-               }
-               else
-               {
-                 dataFattura = ''
-                 dateTimeFattura = progressivoFattura // inserisce un datatime fittizio per ordinare le fatture (poi verrà eliminato)
-               }
-               // compone l'array con le fatture, inserisce anche il numero progressivo di fattura (z)
-               fatture.push([dateTimeFattura, newIdDiffida, rifPraticaFlusso, String(objCasiFatture[z].codcliente),objCasiFatture[z].numeroFattura,objCasiFatture[z].dataFattura, objCasiFatture[z].importoScoperto, dataImportazione]) 
-               //importoTotale += objCasiFatture[z].importoScoperto
+ 
+  
+   var  fatturePerCodiceCliente = objCasiFatture.filter(function (el) {
+    return el.codcliente == objCasiNoFatture[i].codcliente
+   });
+   
+      
+   if (fatturePerCodiceCliente.length > 0){
+       rifPraticaFlusso = newRiferimentoPratica + "/" + tipoFlusso
+       var numeriFatture = []  
+       for (var f = 0; f<fatturePerCodiceCliente.length; f++){
+           numeriFatture.push(fatturePerCodiceCliente[f].numeroFattura)
+        }
+   
+        function onlyUnique(value, index, self) { 
+          return self.indexOf(value) === index;
+        }
+ 
+       var numeriFattureDistinte = numeriFatture.filter(onlyUnique) 
+   	
+  
+      for (var nf=0; nf<numeriFattureDistinte.length; nf++){
+        var numeroFattura = numeriFattureDistinte[nf]
+        var fatturaUnicaPerCodiceCliente = fatturePerCodiceCliente.filter(function (el) {
+          return el.numeroFattura == numeroFattura
+        });
+        
+        Logger.log(fatturaUnicaPerCodiceCliente) 
+        
+        totaleScadutoFatture = 0
+        totaleAScadereFatture = 0
+        totaleScopertoFatture = 0
+        totaleImportiFatture = 0
+        
+        for (var rf=0; rf<fatturaUnicaPerCodiceCliente.length; rf++){
+            totaleScadutoFatture += fatturaUnicaPerCodiceCliente[rf].importoScaduto
+            totaleAScadereFatture += fatturaUnicaPerCodiceCliente[rf].importoAScadere
+            totaleScopertoFatture += fatturaUnicaPerCodiceCliente[rf].importoScoperto
+            
+        var dataImportazioneFattura = dataImportazione
+            if (fatturaUnicaPerCodiceCliente[rf].dataFattura){
+                dataFattura = fatturaUnicaPerCodiceCliente[rf].dataFattura
+                if (typeof(dataFattura) == 'string'){
+                  dateTimeFattura = convertStringToDate(dataFattura).getTime() // non attribuisce un valore cronologicamente congruente alla data !!!
+                }
+                else
+                {
+                  if (isValidDate(dataFattura)){ 
+                    dateTimeFattura = dataFattura.getTime() 
+                  }  
+                }
+              }
+            else
+            {
+              dataFattura = ''
+              dateTimeFattura = progressivoFattura // inserisce un datatime fittizio per ordinare le fatture (poi verrà eliminato)
+            } 
+            
           }
-     }
-     */
-    
-    // versione con accorpamento ratei fatture
-    
-    for (var z=0; z<objCasiFatture.length; z++){  // legge tutte le fatture nel file
-          rifPraticaFlusso = newRiferimentoPratica + "/" + tipoFlusso
-          // inizializza il progressivo fattura
-          Logger.log('codClienteFatture ' + objCasiFatture[z].codcliente + "--->" + 'codClienteDiffide ' + objCasiNoFatture[i].codcliente)
-          if (objCasiFatture[z].codcliente === objCasiNoFatture[i].codcliente){
-            // accorpa i ratei di fattura
-             for (var w=0; w<fatture.length; w++){  //legge le fatture da salvare su diffide da inviare in cerca di una fattura già salvata
-               if (objCasiFatture[z].numeroFattura === fatture[w][4]){    
-                 logRateiFattura.push(progressivoFattura,fatture[w][4],fatture[w][6])
-                 fatturaInRatei = true
-                 fatture[w][6] = fatture[w][6] + objCasiFatture[z].importoScoperto // accorpa l'importo di questo rateo con quello già presente
-                 Logger.log(fatture[w][6])
-                 continue
-               }
-             }
-             if (fatturaInRatei == false){
-               progressivoFattura++
-               var dataImportazioneFattura = dataImportazione
-               if (objCasiFatture[z].dataFattura){
-                 dataFattura = objCasiFatture[z].dataFattura        
-                 dateTimeFattura = new Date(dataFattura).getTime() // non attribuisce un valore cronologicamente congruente alla data !!!
-               }
-               else
-               {
-                 dataFattura = ''
-                 dateTimeFattura = progressivoFattura // inserisce un datatime fittizio per ordinare le fatture (poi verrà eliminato)
-               }
-               // compone l'array con le fatture, inserisce anche il numero progressivo di fattura (z)
-               fatture.push([dateTimeFattura, newIdDiffida, rifPraticaFlusso, String(objCasiFatture[z].codcliente),objCasiFatture[z].numeroFattura,objCasiFatture[z].dataFattura, objCasiFatture[z].importoScoperto, dataImportazione]) 
+        progressivoFattura++
+        
+        totaleImportiFatture = totaleScadutoFatture + totaleAScadereFatture + totaleScopertoFatture
+        //var fatturaBuffer = [new Date(dataFattura).getTime(), newIdDiffida, rifPraticaFlusso, String(objCasiNoFatture[i].codcliente),numeroFattura,dataFattura,totaleImportiFatture , dataImportazione]
+        fatture.push([dateTimeFattura, newIdDiffida, rifPraticaFlusso, String(objCasiNoFatture[i].codcliente),numeroFattura,dataFattura,totaleImportiFatture , dataImportazione]) 
+      }
+  }  
+  
+  Logger.log(fatture)
 
-          }
-               importoTotaleFatture += objCasiFatture[z].importoScoperto  
-     }
-      progressivoImportazioni++
-    }
-     Logger.log('fatture con shift e sort by date ' + JSON.stringify(fatture)) 
-     
+ 
+     Logger.log('fatture con shift e sort by date ' + JSON.stringify(fatture))  
      // finalizza l'oggetto diffida
      objDiffideDaImportare[i]['Fatture presenti'] = progressivoFattura
      //objDiffideDaImportare[i]['Importo totale'] = importoTotale
      objDiffideDaImportare[i]['Spese legali'] = speseLegali
-     objDiffideDaImportare[i]['Importo totale fatture'] = importoTotaleFatture
+     objDiffideDaImportare[i]['Totale scoperto fatture'] = totaleScopertoFatture
      // verifica se l'importo totale di CasiNoFatture è difforme dal totale degli importi delle fatture da CasiFatture                       
           if (objDiffideDaImportare[i]['Importo totale'] != objDiffideDaImportare[i]['Importo totale fatture']){
              numErr++;
-             amountErr = new amountError ('Importi','Difformità tra l\'importo totale della pratiaca e la somma degli importi delle fatture', objDiffideDaImportare[i]['Importo totale'], objDiffideDaImportare[i]['Importo totale fatture'])
+             amountErr = new amountError ('Importi','Difformità tra l\'importo totale della pratiaca e la somma degli importi delle fatture', objDiffideDaImportare[i]['Importo totale'], objDiffideDaImportare[i]['Totale scoperto fatture'])
              importErr = new importError (numErr, 'in fase di importazione',  objDiffideDaImportare[i]['ID diffida'], objDiffideDaImportare[i]['Codice cliente'], amountErr);
              
              objErrors.push(importErr)
           }   
           
-     // ordina fatture per data di emissione
+        // ordina fatture per data di emissione
       fatture.sort(function(a,b) {
+
         return a[0]-b[0]
       });
+      
+
+
      Logger.log('fatture ordinate per data ' + JSON.stringify(fatture))
      // elimina il primo elemento da tutti gli array
      fatture.map(function(val){
        return val.shift(0);
      });
-     
+
+      
      objDiffideDaImportare[i]['Fatture'] = fatture
 
      // scrive gli affidi sul foglio Diffide Da Inviare

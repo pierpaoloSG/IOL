@@ -271,3 +271,23 @@ function removeEmptyRows(sh){
       sh.deleteRows(lastRow+1, maxRows-lastRow);
   }
 }
+
+
+function convertStringToDate (dateString){
+// formato dd/MM/aaaa 
+
+var dd = dateString.substring(1,2)
+var MM = dateString.substring(4,5)
+var yyyy = dateString.substring(7,10)
+
+var date = new Date(yyyy, MM-1, dd)
+return date
+}
+
+
+function isValidDate(value) {
+
+    var dateWrapper = new Date(value);
+    return !isNaN(dateWrapper.getDate());
+}
+

@@ -37,13 +37,16 @@ SVILUPPO
 - escludere dalla stampa diffide le pratiche exFlusso (possibilmente in fase di selezione sul browser) - fatto
 - Gestione dato fiscale - fatto 
 - Liste di esportazione ( in attesa di esito da Fabrizio)
-- alert in caso di difformità tra importo totle e fatture
+- funzione di esportazione autonoma (selezionare le pratiche da esportare)
+- alert in caso di difformità tra importo totale e fatture
 - gestione ordine di importazione dei files in modo batch
 - Formato importi con virgola e doppia cifra digitale - complicato
 - DUPLICATI - importare, progressivare, segnalare
 - lista di controllo in orizzontale unire prime due colonne e aggiungere colonna Descrizione
+- controllo correttezza importazione diffide (totale pratiche, totale fatture ?, totale importo scoperto)
 
 Minori
+
 - indicazione utenti connessi
 - contatore numero documenti stampati in giornata
 - date di importazione e di stampa fissate al momento del lancio del comando
