@@ -286,8 +286,10 @@ return date
 
 
 function isValidDate(value) {
-
     var dateWrapper = new Date(value);
-    return !isNaN(dateWrapper.getDate());
+    Logger.log(dateWrapper)
+    return !isNaN(dateWrapper.getDate())
 }
+
+
 

@@ -387,6 +387,13 @@ $(document).ready(function(){
           return $rows.find('td').eq(9).html()=='Inviata';
       });
       console.log("noExported " + noExported.length)
+      var now = moment(new Date()).format("DD/MM/YYYY")
+      if (noExported.length == 0) {
+        var outputMessage = now +': Tutte le diffide risultano già esportate.'
+        $('#outputPanelText').html(outputMessage)
+        return false
+      }
+      
       $(noExported).each(function(){
             var parts = $(this).closest('tr').find('td').eq(2).html().split("/");
             var flusso = parts[parts.length - 1]; // Or parts.pop();
@@ -396,8 +403,9 @@ $(document).ready(function(){
             }  
       });
       
-      objDiffide.diffide = diffide.reverse()
-      console.log((objDiffide.diffide).length + ' diffide to export: ' + objDiffide.diffide)
+      objDiffide.diffide = diffide.reverse() 
+      var outputMessage = '<p>' + now +': Saranno esportate ' + (objDiffide.diffide).length + ' diffide</p>'
+      $('#outputPanelText').html(outputMessage)
       exportDiffide(objDiffide)
       })
  
@@ -425,11 +433,14 @@ $(document).ready(function(){
         var resultDate = moment().format("DD/MM/YYYY h:mm:ss ")
 
            var resultMessage = (results == 1) ? ' diffida correttamente esportata ':' diffide correttamente esportate ' 
-           outputMessage = "<p>sui seguenti files: \n" +  "<a href='" + results[1] + "' target='_blank'>Testata Pratiche</a><br>"
-           //outputMessage += resultDate + "\n Dettagli fatture: <a href='" +results[3]+"' target='_blank'>" + results[4]+ "</a><br>"
+           outputMessage = "<p>" + resultDate + ""
+           outputMessage += resultMessage + "sui seguenti files:<br>" +  "<a href='" + results[1] + "' target='_blank'>Testata Pratiche</a><br>"
+           outputMessage += "<a href='" +results[2]+"' target='_blank'>Recapiti</a><br>"
+           outputMessage += "<a href='" +results[3]+"' target='_blank'>Lettere</a><br>"
+           outputMessage += "<a href='" +results[4]+"' target='_blank'>Dettagli fatture</a><br>"
            //aggiorna la tabella diffide
            console.log(outputMessage)
-        $('#outputPanelText').append(outputMessage)
+        $('#outputPanelText').html(outputMessage)
       }
       
       function onErrorExporting(err){
@@ -598,7 +609,7 @@ google.script.run
                      tr.append("<td></td>");
                 }
                 if (diffide[i]['Data esportazione']!='') {
-                     tr.append("<td>" + moment(diffide[i]['Data invio']).format("DD/MM/YYYY") + "</td>");
+                     tr.append("<td>" + moment(diffide[i]['Data esportazione']).format("DD/MM/YYYY hh:mm:ss") + "</td>");
                 }
                 else
                 {
@@ -606,7 +617,7 @@ google.script.run
                 }
                 
                  if (diffide[i]['Data invio']!='') {
-                     tr.append("<td >" + moment(diffide[i]['Data esportazione']).format("DD/MM/YYYY hh:mm:ss ") + "</td>");
+                     tr.append("<td >" + moment(diffide[i]['Data invio']).format("DD/MM/YYYY") + "</td>");
                 }
                 else
                 {

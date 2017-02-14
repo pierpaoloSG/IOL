@@ -210,6 +210,7 @@ Logger.log(objData)
   Logger.log(fattureOuter)
   sheetExportDettagliFatture.getRange(2,1,fattureOuter.length,headers.length).setValues(fattureOuter)
   removeEmptyRows(sheetExportDettagliFatture)
+  updateSheets(objDiffideToExport)
   //ObjDB.insertRow( db, 'dettagli fatture', fattureOuter )
   var results = [objDiffideToExport.length, urlExportTestataPratiche,urlExportRecapiti,urlExportLettere,urlExportDettagliFatture]
   return results
