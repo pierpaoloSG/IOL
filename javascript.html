@@ -9,6 +9,7 @@ function start(){
 
 $(document).ready(function(){
 
+$('.tooltip').tooltip();
 // mini-plug-in che permette l'aggiornamento dei selectors con il metodo refresh es. $selector.refresh()
 
 
@@ -89,12 +90,12 @@ $(document).ready(function(){
       $checkSinglesVisible = $checkSingles.not(":hidden")
       if ($checkSinglesChecked.length >0){
           $("#print").prop("disabled", false)
-          $("#export").prop("disabled", false)
+          //$("#export").prop("disabled", false) il pulsante esporta è sempre abilitato
       }
       else
       {
           $("#print").prop("disabled", true) 
-          $("#export").prop("disabled", true)
+          //$("#export").prop("disabled", true)  il pulsante esporta è sempre abilitato
       }
       var $checkSinglesCheckedVisible = $checkSinglesChecked.not(":hidden")
       $("#praticheChecked").html($checkSinglesCheckedVisible.length)
@@ -122,12 +123,12 @@ $(document).ready(function(){
      
       if ( $checkSinglesChecked.length >0){
           $("#print").prop("disabled", false)
-          $("#export").prop("disabled", false)
+          //$("#export").prop("disabled", false)  il pulsante esporta è sempre abilitato
       }
       else
       {
           $("#print").prop("disabled", true)
-          $("#export").prop("disabled", true)
+          //$("#export").prop("disabled", true)  il pulsante esporta è sempre abilitato
        
       }
 
@@ -374,7 +375,7 @@ $(document).ready(function(){
       })
  
 //********************************************************************* 
-  
+
   $('#export').on('click', function (e) {
      console.log('export Diffide')
       var objDiffide = {
@@ -386,10 +387,11 @@ $(document).ready(function(){
       var noExported = $rows.filter(function() {
           return $rows.find('td').eq(9).html()=='Inviata';
       });
+      
       console.log("noExported " + noExported.length)
       var now = moment(new Date()).format("DD/MM/YYYY")
       if (noExported.length == 0) {
-        var outputMessage = now +': Tutte le diffide risultano già esportate.'
+        var outputMessage = now +': Non risultano pratiche da esportare.' 
         $('#outputPanelText').html(outputMessage)
         return false
       }

@@ -347,9 +347,8 @@ Logger.log(ssAffido.getUrl())
           }
         progressivoFattura++
         
-        totaleImportiFatture = totaleScadutoFatture + totaleAScadereFatture + totaleScopertoFatture
         //var fatturaBuffer = [new Date(dataFattura).getTime(), newIdDiffida, rifPraticaFlusso, String(objCasiNoFatture[i].codcliente),numeroFattura,dataFattura,totaleImportiFatture , dataImportazione]
-        fatture.push([dateTimeFattura, newIdDiffida, rifPraticaFlusso, String(objCasiNoFatture[i].codcliente),numeroFattura,dataFattura,totaleImportiFatture , dataImportazione]) 
+        fatture.push([dateTimeFattura, newIdDiffida, rifPraticaFlusso, String(objCasiNoFatture[i].codcliente),numeroFattura,dataFattura, totaleScopertoFatture , dataImportazione]) 
       }
   }  
   
@@ -373,7 +372,6 @@ Logger.log(ssAffido.getUrl())
           
         // ordina fatture per data di emissione
       fatture.sort(function(a,b) {
-
         return a[0]-b[0]
       });
       
