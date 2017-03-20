@@ -428,7 +428,7 @@ function onSentExFlusso(message){
       // var noExported = $(this).closest('tr').find('td').eq(9).html() 
       var $rows = $('#tableDiffide tr').not('thead tr')
       var noExported = $rows.filter(function() {
-          return $(this).find('td').eq(9).text()=='Inviata'
+          return $(this).find('td').eq(12).text()!=''
       });
       console.log('Saranno esportate ' + noExported.length + ' diffide')
       var now = moment(new Date()).format("DD/MM/YYYY")
