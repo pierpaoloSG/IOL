@@ -428,9 +428,10 @@ function onSentExFlusso(message){
       // var noExported = $(this).closest('tr').find('td').eq(9).html() 
       var $rows = $('#tableDiffide tr').not('thead tr')
       var noExported = $rows.filter(function() {
-          return $(this).find('td').eq(12).text()!=''
+          return $(this).find('td').eq(12).html()==''
       });
       console.log('Saranno esportate ' + noExported.length + ' diffide')
+      // return false - per il test
       var now = moment(new Date()).format("DD/MM/YYYY")
       if (noExported.length == 0) {
         var outputMessage = now +': Non risultano pratiche da esportare.' 
@@ -475,7 +476,7 @@ function onSentExFlusso(message){
       function onExportedDiffide(results){   
         console.log(results)
         console.log('diffide exported')
-        var $icon = $('#export')
+        var $icon = $('#export > span.glyphicon.glyphicon-refresh.glyphicon-refresh-animate')
         $icon.removeClass('glyphicon-refresh')
         $icon.removeClass('glyphicon-refresh-animate')
         $icon.addClass('glyphicon-export')
@@ -490,6 +491,7 @@ function onSentExFlusso(message){
            outputMessage += "<a href='" +results[4]+"' target='_blank'>Dettagli fatture</a><br>"
            //aggiorna la tabella diffide
            console.log(outputMessage)
+           createTableDiffide()
         $('#outputPanelText').html(outputMessage)
       }
       
