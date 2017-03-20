@@ -418,6 +418,7 @@ function onSentExFlusso(message){
 
   $('#export').on('click', function (e) {
      console.log('export Diffide')
+     //aggiorna la tabella visualizzata
      createTableDiffide()
      setTimeout(function(){}, 2000);
       var objDiffide = {
@@ -472,9 +473,9 @@ function onSentExFlusso(message){
     }
       
       function onExportedDiffide(results){   
-         console.log(results)
+        console.log(results)
         console.log('diffide exported')
-        var $icon = $('#print')
+        var $icon = $('#export')
         $icon.removeClass('glyphicon-refresh')
         $icon.removeClass('glyphicon-refresh-animate')
         $icon.addClass('glyphicon-export')
