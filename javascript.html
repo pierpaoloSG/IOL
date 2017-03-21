@@ -22,9 +22,10 @@ $(document).ready(function(){
       
       //gestisce il change di checkAll
       $checkAll.change(function () {
-      $checkSingles.each(function() {
-            $(this).prop("checked", $checkAll.prop("checked"));
-        })
+      var $checkSingleVisible = $checkSingles.not(":hidden")
+          $checkSinglesVisible.each(function(i) {
+          $(this).prop("checked", $checkAll.prop("checked"));
+      })
       
       $checkSinglesChecked = $table.find("input[type=checkbox]:checked").not(".checkAll")
      
@@ -82,90 +83,87 @@ $(document).ready(function(){
       
       
       $("#tableDiffide" ).on('click', function(){  
-      var $table = $(this)
-      var $checkAll = $table.find(".checkAll")
-      var $checkSingles = $table.find("input[type=checkbox]").not(".checkAll")
-      var $checkSinglesVisible = $checkSingles.not(":hidden")
-      var $checkSinglesChecked = $table.find("input[type=checkbox]:checked").not(".checkAll")
-      var $checkSinglesCheckedVisible = $checkSinglesChecked.not(":hidden")
-      var $notChecked = $checkSingles.not(":checked");
-      
-      
-      //*****************************************
-      //gestisce il change di checkSingle 
-      
-      $checkSingles.change(function () { 
-      $checkSinglesChecked = $table.find("input[type=checkbox]:checked").not(".checkAll")
-      $checkSinglesVisible = $checkSingles.not(":hidden")
-      if ($checkSinglesChecked.length >0){
-          $("#print").prop("disabled", false)
-          //$("#export").prop("disabled", false) il pulsante esporta è sempre abilitato
-      }
-      else
-      {
-          $("#print").prop("disabled", true) 
-          //$("#export").prop("disabled", true)  il pulsante esporta è sempre abilitato
-      }
-      var $checkSinglesCheckedVisible = $checkSinglesChecked.not(":hidden")
-      $("#praticheChecked").html($checkSinglesCheckedVisible.length)
-      
-      
-      if ($checkSinglesChecked.length == $checkSinglesVisible.length){
-          $checkAll.prop("checked", true)
-      }
-      else
-      {
-         $checkAll.prop("checked", false)
-      }
-      
-      })
-      
-      //*****************************************
-      //gestisce il change di checkAll
-      $checkAll.change(function () {
-      $checkSingles.each(function() {
-            $(this).prop("checked", $checkAll.prop("checked"));
+            var $table = $(this)
+            var $checkAll = $table.find(".checkAll")
+            var $checkSingles = $table.find("input[type=checkbox]").not(".checkAll")
+            var $checkSinglesVisible = $checkSingles.not(":hidden")
+            var $checkSinglesChecked = $table.find("input[type=checkbox]:checked").not(".checkAll")
+            var $checkSinglesCheckedVisible = $checkSinglesChecked.not(":hidden")
+            var $notChecked = $checkSingles.not(":checked");
+            
+            
+            //*****************************************
+            //gestisce il change di checkSingle 
+            
+            $checkSingles.change(function () { 
+            $checkSinglesChecked = $table.find("input[type=checkbox]:checked").not(".checkAll")
+            $checkSinglesVisible = $checkSingles.not(":hidden")
+            if ($checkSinglesChecked.length >0){
+                $("#print").prop("disabled", false)
+                //$("#export").prop("disabled", false) il pulsante esporta è sempre abilitato
+            }
+            else
+            {
+                $("#print").prop("disabled", true) 
+                //$("#export").prop("disabled", true)  il pulsante esporta è sempre abilitato
+            }
+            var $checkSinglesCheckedVisible = $checkSinglesChecked.not(":hidden")
+            $("#praticheChecked").html($checkSinglesCheckedVisible.length)
+            
+            if ($checkSinglesChecked.length == $checkSinglesVisible.length){
+                $checkAll.prop("checked", true)
+            }
+            else
+            {
+               $checkAll.prop("checked", false)
+            }
+            
+            })
+            
+            //*****************************************
+            
+        //gestisce il change di checkAll
+            $checkAll.change(function () {              
+                  var $checkSingleVisible = $checkSingles.not(":hidden")
+                  $checkSinglesVisible.each(function(i) {
+                        $(this).prop("checked", $checkAll.prop("checked"));
+                  })
+                  
+                  var  $checkSinglesChecked = $table.find("input[type=checkbox]:checked").not(".checkAll")
+            
+                 
+                  if ( $checkSinglesChecked.length >0){
+                      $("#print").prop("disabled", false)
+                  }
+                  else
+                  {
+                      $("#print").prop("disabled", true)
+                  }
+                     $("#praticheChecked").html($checkSinglesVisible.length)
+            })
+                        
         })
+            
+       // button Filter // essendo annidato nel click listener della table è necessario cliccare 2 volte 
+              $('.filterable .btn-filter').click(function(){
+              
+              var $panel = $(this).parents('.filterable'),
+              $filters = $panel.find('.filters input'),
+              $tbody = $panel.find('.table tbody'),
+              $checkboxesChecked = $tbody.find("input[type=checkbox]:checked")
+              $("#praticheVisible").html($checkboxesChecked.length)
+              console.log( $checkboxesChecked.length)
       
-      var  $checkSinglesChecked = $table.find("input[type=checkbox]:checked").not(".checkAll")
-
-     
-      if ( $checkSinglesChecked.length >0){
-          $("#print").prop("disabled", false)
-          //$("#export").prop("disabled", false)  il pulsante esporta è sempre abilitato
-      }
-      else
-      {
-          $("#print").prop("disabled", true)
-          //$("#export").prop("disabled", true)  il pulsante esporta è sempre abilitato
-       
-      }
-
-         $("#praticheChecked").html($checkSinglesChecked.length)
-      })
-            
-      })
-      
- // button Filter
-        $('.filterable .btn-filter').click(function(){
-        
-        var $panel = $(this).parents('.filterable'),
-        $filters = $panel.find('.filters input'),
-        $tbody = $panel.find('.table tbody'),
-        $checkboxesChecked = $tbody.find("input[type=checkbox]:checked")
-        $("#praticheVisible").html($checkboxesChecked.length)
-        console.log( $checkboxesChecked.length)
-
-        if ($filters.prop('disabled') === true) {
-            $filters.prop('disabled', false);
-            
-        } else {
-            $filters.val('').prop('disabled', true);
-            
-            $tbody.find('.no-result').remove();
-            $tbody.find('tr').show();
-        }
-    });
+              if ($filters.prop('disabled') === true) {
+                  $filters.prop('disabled', false);
+                  
+              } else {
+                  $filters.val('').prop('disabled', true);
+                  
+                  $tbody.find('.no-result').remove();
+                  $tbody.find('tr').show();
+              }
+      });
 
 
     $('.filterable .filters input').not('#range').keyup(function(e){
