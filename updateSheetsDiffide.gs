@@ -1,6 +1,5 @@
 
 function updateSheets(objDiffideInviate, docFileUrl, docName){
-   // aggiunge le diffide nello sheet diffide inviate
   Logger.log('updateSheetDiffide')
   Logger.log(objDiffideInviate)
   var arrayDiffideDaInviare = sheetDiffideDaInviare.getDataRange().getValues()
@@ -8,7 +7,6 @@ function updateSheets(objDiffideInviate, docFileUrl, docName){
   var headersDiffideDaInviare = arrayDiffideDaInviare[0]
   var colDiffideInviate = headersDiffideDaInviare.length
   var colDataStampa = headersDiffideDaInviare.indexOf('Data stampa')+1
-  var colDataExport = headersDiffideDaInviare.indexOf('Data esportazione')+1
   var colDataInvio = headersDiffideDaInviare.indexOf('Data invio')+1
   var colStato = headersDiffideDaInviare.indexOf('Stato')+1
     
@@ -34,13 +32,11 @@ function updateSheets(objDiffideInviate, docFileUrl, docName){
             arrayDiffideInviate.push(arrayDiffideDaInviare[j])
             arrayDiffideInviate[inviate-1].pop()
             arrayDiffideInviate[inviate-1].push(objDiffideInviate[i]['Data stampa'])
-            arrayDiffideInviate[inviate-1].push(objDiffideInviate[i]['Data esportazione'])
             arrayDiffideInviate[inviate-1].push(objDiffideInviate[i]['Data invio'])
             arrayDiffideInviate[inviate-1].push(objDiffideInviate[i]['Stato'])
             
             sheetDiffideDaInviare.getRange(j+2,colDataStampa).setValue(objDiffideInviate[i]['Data stampa'])
-            sheetDiffideDaInviare.getRange(j+2,colDataExport).setValue(objDiffideInviate[i]['Data esportazione'])
-            sheetDiffideDaInviare.getRange(j+2,colDataInvio).setValue(objDiffideInviate[i]['Data invio']) 
+            sheetDiffideDaInviare.getRange(j+2,colDataInvio).setValue(objDiffideInviate[i]['Data invio'])
             sheetDiffideDaInviare.getRange(j+2,colStato).setValue(objDiffideInviate[i]['Stato'])
          }
     } 
@@ -52,8 +48,13 @@ Logger.log(arrayDiffideDaInviare)
 Logger.log('arrayDiffideInviate')
 Logger.log(arrayDiffideInviate)
 
+  
+  // aggiunge le diffide nello sheet diffide inviate
+  for (var i=0; i<arrayDiffideInviate.length; i++){
+    sheetDiffideInviate.appendRow(arrayDiffideInviate[i])
+  }
   //var results = [arrayDiffideInviate.length, docFileUrl, docName]
   //Logger.log(results)
   //return results
-  return arrayDiffideInviate
+  return
 }

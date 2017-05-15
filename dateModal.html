@@ -10,10 +10,11 @@
         <h4 class="modal-title">Seleziona intervallo di stampa</h4>
       </div>
       <div class="modal-body">  
-             <form id='formDateModal' class="form-horizontal" data-toggle="validator" role="form">
+      
+             <form class="form-horizontal">
                  <div class="control-group">
                    <label>Indicare la data d'invio</label>
-                          <div class='input-group date col-sm-3' id='dataInvio' data-required-error="E' necessario inserire la data d'invio." data-date-format="dd/MM/yyyy">
+                          <div class='input-group date col-sm-3' id='dataInvio' data-required-error="E' necessario inserire la data d'invio." data-date-format="DD/MM/YYYY">
                             <input type='text' class="form-control" >
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
@@ -46,17 +47,21 @@
                  <div class="form-actions">
                       <br>
                      <button type="reset" class="btn btn-inverse">Reset</button>
-                     <button id="send" type="submit" class="btn btn-default btn-sm pull-right" >
-                           <span class="glyphicon glyphicon-print"></span>
-                           <span style="font-size:smaller;">Invia</span>
-                     </button> 
-                </div>
-   
-               </form>
-               <div class="modal-footer">   
+                 </div>
+            </form>
+                     
+                                          
 
-               </div>
+             
+      <div class="modal-footer">   
+
+               <button id="send" type="button" class="btn btn-default btn-sm pull-right" data-dismiss="modal">
+                                          <span class="glyphicon glyphicon-print"></span>
+                                          <span style="font-size:smaller;">Invia</span>
+               </button> 
        </div>
+     </div>
+
     </div>
   </div>
 </div>

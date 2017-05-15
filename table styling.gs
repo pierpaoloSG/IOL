@@ -25,7 +25,7 @@ styleTable = {}
  
 styleHeaderCell = {}
      styleHeaderCell[DocumentApp.Attribute.HORIZONTAL_ALIGNMENT] =
-         DocumentApp.HorizontalAlignment.CENTER;
+         DocumentApp.HorizontalAlignment.LEFT;
      styleHeaderCell[DocumentApp.Attribute.FONT_FAMILY] = 'Calibri';
      styleHeaderCell[DocumentApp.Attribute.FONT_SIZE] = 10;
      styleHeaderCell[DocumentApp.Attribute.BOLD] = true;
@@ -42,7 +42,7 @@ styleFirstColumnCell = {}
  
 styleCell = {}
      styleCell[DocumentApp.Attribute.HORIZONTAL_ALIGNMENT] =
-         DocumentApp.HorizontalAlignment.CENTER;
+         DocumentApp.HorizontalAlignment.LEFT;
      styleCell[DocumentApp.Attribute.FONT_FAMILY] = 'Calibri';
      styleCell[DocumentApp.Attribute.FONT_SIZE] = 8;
      styleCell[DocumentApp.Attribute.BOLD] = false;

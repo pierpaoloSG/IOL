@@ -236,59 +236,6 @@ function exportAsExcel(spreadsheetId) {
 }
 
 
-function getGoogleSpreadsheetAsExcel(){
-  
-  try {
-    
-    var ss = SpreadsheetApp.getActive();
-    
-    var url = "https://docs.google.com/feeds/download/spreadsheets/Export?key=" + ss.getId() + "&exportFormat=xlsx";
-    
-    var params = {
-      method      : "get",
-      headers     : {"Authorization": "Bearer " + ScriptApp.getOAuthToken()},
-      muteHttpExceptions: true
-    };
-    
-    var blob = UrlFetchApp.fetch(url, params).getBlob();
-    
-    blob.setName(ss.getName() + ".xlsx");
-    
-    MailApp.sendEmail("amit@labnol.org", "Google Sheet to Excel", "The XLSX file is attached", {attachments: [blob]});
-    
-  } catch (f) {
-    Logger.log(f.toString());
-  }
-}
-
-function removeEmptyRows(sh){
-  var maxRows = sh.getMaxRows(); 
-  var lastRow = sh.getLastRow();
-  Logger.log(lastRow)
-  Logger.log(maxRows)
-  Logger.log(maxRows-lastRow)
-  if (maxRows != lastRow){
-      sh.deleteRows(lastRow+1, maxRows-lastRow);
-  }
-}
-
-
-function convertStringToDate (dateString){
-// formato dd/MM/aaaa 
-var dateString="15/02/2017"
-var dd = dateString.substring(0,2)
-var MM = dateString.substring(3,5)
-var yyyy = dateString.substring(6,10)
-var date = new Date(yyyy, MM-1, dd)
-return date
-}
-
-
-function isValidDate(value) {
-    var dateWrapper = new Date(value);
-    Logger.log(dateWrapper)
-    return !isNaN(dateWrapper.getDate())
-}
 
 
 

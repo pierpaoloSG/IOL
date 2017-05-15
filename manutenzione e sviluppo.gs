@@ -1,46 +1,14 @@
 /* 
 
 ANALISI
-Il database è implementato su un file in formato gsheet, alcuni fogli di tale files rappresentano le tabelle (relazioni): 
-  - Files affidi
-  - Diffide da inviare
-  - Dettaglio fatture
 
-Entità 
-1) Files Affidi
-   si tratta di files in formato gsheet contenenti 3 fogli (CASINOFATTURE, CASIFATTURE, INFO CAMERALI)
-   i files sono conservati in una cartella di Google Drive
-   con il comando "aggiorna" del panel Files Affidi, viene letta la cartella in cerca di nuovi files da 'importare' nel foglio Files Affidi
-   quando un file viene inserito in tabella assume lo stato 'Assegnato' e marcato con la data di importazione del file e il tag 'new' 
-   quando le pratiche presenti nel file vengono importate nella tabella Diffide da inviare (che sarebbe più corretto chiamare Pratiche), il file assume lo stato 'Importato'
-   forse sarebbe meglio chiamarlo 'Esportato' nel senso che le pratiche in esso presenti vengono esportate nella tabella Diffide da inviare
-
-2) Diffide da inviare (Pratiche)
-   si tratta della testata pratica 
-   come stato iniziale ha importata
-   può assumere gli stato inviata, esportata (va aggiunto uno stato 'archiviata')
-
-3) Dettaglio fatture
-   si tratta delle singole fatture presenti nella pratica
-   ogni fattura contiene la chiave esterna che l'associa alla testata pratica corrispondente
-   
-   
-   
-// importazione delle pratiche presenti sui files 
-    // da priorità agli indirizzi presenti sul Info Camerali
-    // determina il flusso di appartenenza (IOL, MP, ecc) e di conseguenza determina il numero progressivo
-    // scrive le pratiche sui fogli 'Diffide da Inviare' e 'Dettaglio fatture' previo eventuale accorpamento dei ratei fatture
-    
-// stampa diffide 
-   // permette di selezionare le pratiche desiderate per stampare le lettere di diffida
-   // stampa le diffide in un unico documento in formato gdoc a partire da un template dedicato
-   // stampa la lista di controllo in un altro documento in formato gdoc a partire da un template dedicato
-   
-// esporta su file per gestionale Fabrizio 
-    // esporta tutte le pratiche che si trovano nello stato 'Inviata' ad esclusione di quelle con protocollo IOL
-    // sovrascrive 4 files in formato gdoc che poi vanno convertiti manualmente in formato xls
-    
-// inserisce pratiche extra flusso con protocollo IOL e indicazione della tipologia (es. OPPOSIZIONE, FALLIMENTO, ecc)
+// legge la cartella Files Affidi da Importare
+// per ogni file presente procede con l'importazione su foglio 'Diffide da Inviare' (con indicazione di data di importazione)
+// stampa diffide
+// stampa etichette
+// sposta Diffide da Inviare su foglio Diffide inviate (con indicazione di data di importazione lotto e data di invio diffide)
+// cancella foglio Diffide da inviare
+// produce tabelle per gestionale Fabrizio
 
 
 Correzione BUGS 
@@ -65,24 +33,14 @@ SVILUPPO
 - Stampa lista di controllo in coda alla stampa diffide. Rif Pratica, Tipologia flusso, Codice cliente, Ragione sociale, Indirizzo - fatto
 - template diffide spese legali aggiugere 00 dopo la virgola - fatto
 - utilizzare la colonna stato affido per determinare il flusso - fatto
-- gestione inserimenti exFlusso - OPPOSIZIONI, FALLIMENTI, CONCORDATI gestione ordinaria - importati IOL, progressivati, segnalati, no stampa diffida - fatto
-- escludere dalla stampa diffide le pratiche exFlusso (possibilmente in fase di selezione sul browser) - fatto
-- Gestione dato fiscale - fatto 
-- Liste di esportazione ( in attesa di esito da Fabrizio)
-- funzione di esportazione autonoma (selezionare le pratiche da esportare)
-- alert in caso di difformità tra importo totale e fatture
-- gestione ordine di importazione dei files in modo batch
+- gestione inserimenti Opposizioni
+- Liste di esportazione 
 - Formato importi con virgola e doppia cifra digitale - complicato
 - DUPLICATI - importare, progressivare, segnalare
+- OPPOSIZIONI, FALLIMENTI, CONCORDATI gestione ordinaria - importati IOL, progressivati, segnalati, no stampa diffida
 - lista di controllo in orizzontale unire prime due colonne e aggiungere colonna Descrizione
-- controllo correttezza importazione diffide (totale pratiche, totale fatture ?, totale importo scoperto)
-- archiviazione pratiche (probabilmente necessarie per ridurre i tempi di caricamento)
-
-Minori
-
 - indicazione utenti connessi
 - contatore numero documenti stampati in giornata
-- date di importazione e di stampa fissate al momento del lancio del comando
 
 
 

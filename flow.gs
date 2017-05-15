@@ -25,21 +25,18 @@ function readDiffideFromFiles(arrayObjFilesAffidi){
       Logger.log(ssAffido.getName())
     var results = readAffido(ssAffido)
     var objDiffideDaImportare = results[0]
-    var dataImportazioneAffido = results[1]
-    var erroriImportazioneDiffide = results[2]
-    var logRateiFattura = results[3]
+    var erroriImportazioneDiffide = results[1]
     Logger.log("errori di importazione \n" + JSON.stringify(erroriImportazioneDiffide))
-    var fileState = updateFileState(url,dataImportazioneAffido) 
+    var fileState = updateFileState(url) 
     }
     Logger.log(objDiffideDaImportare)
-    return JSON.stringify(results)  
+    return JSON.stringify(objDiffideDaImportare)  
  } 
 
- 
+
 function readDiffideDaInviareFromSheet(){
     Logger.log('readDiffideDaInviareFromSheet')
     var objAllDiffideDaInviare = ObjApp.rangeToObjectsNoCamel(sheetDiffideDaInviare.getDataRange().getValues())
-    Logger.log('objAllDiffideDaInviare')
     Logger.log(objAllDiffideDaInviare)
     Logger.log(JSON.stringify(objAllDiffideDaInviare))
     return JSON.stringify(objAllDiffideDaInviare)
