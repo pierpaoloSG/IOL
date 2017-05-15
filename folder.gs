@@ -1,7 +1,9 @@
 function countFilesInFolder(folderID) {
  // Attenzione modificare la folder in caso di necessità
   // cerca gli spreadsheet presenti nella folder indicata
- var query = "trashed = false  and mimeType = 'application/vnd.google-apps.spreadsheet' and '0BwA0zaKu6qcrNjlpWFN4Y0NoQkU' in parents"
+ Logger.log(folderID)
+ var query = "trashed = false  and mimeType = 'application/vnd.google-apps.spreadsheet' and '" + folderID +"' in parents"
+ Logger.log(query)
 
   var filesInFolder = Drive.Files.list({q: query});
 

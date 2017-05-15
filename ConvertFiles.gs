@@ -1,14 +1,28 @@
-function convertFiles() {
+function convertFiles(filesType) {
     Logger.log('convertFiles')
     
-    var files = affidiOriginaliFolder.getFiles()
-    var file, data, sheet = sheetFilesAffidi;
+    switch (filesType) {
+    
+      case 'Report': 
+           var sourceFolder = reportOriginaliFolder
+           var sheet = sheetFilesReport
+           break;
+      case 'Affidi':
+            var sourceFolder = affidiOriginaliFolder
+            var sheet = sheetFilesAffidi
+            break;
+      default :
+    
+    }
+    
+    var files = sourceFolder.getFiles()
+    var file, data
     var alreadyConverted = false
     var onFolder = 0
     var lastRow = sheet.getLastRow()
     var wroteOnSheet = lastRow -1 
     var row
-    var numberOfFilesInFolder = countFilesInFolder()
+    var numberOfFilesInFolder = countFilesInFolder(sourceFolder)
     //itera lungo i file trovati sulla folder
     while (files.hasNext()) {
             file = files.next();
@@ -17,17 +31,16 @@ function convertFiles() {
              // imposta il valore di una nuova riga dello sheet
             //con i dati del file sulla folder
             var name = file.getName()
-            var tipoFlusso = name.slice(0,2)
 
             data = [ 
               name,
-              tipoFlusso,
               file.getDateCreated(),
               file.getUrl(),
               "Assegnato", //Stato
               new Date(), //Data assegnazione 
             ];
-        
+            
+            Logger.log('DATA ************************************************')
             Logger.log(data)
                   
                   //verifica se il file presente sulla folder è già presente sullo sheet
@@ -55,6 +68,10 @@ function convertFiles() {
                   wroteOnSheet++ 
               }          
      }
-        //torna su flow (readFilesAffidiFromFolder) 
+     var objFilesImported = ObjApp.rangeToObjectsNoCamel(sheet.getDataRange().getValues())
+     Logger.log(JSON.stringify(objFilesImported))
+     stop
+     return JSON.stringify(objFilesImported)
+     
 }
 
