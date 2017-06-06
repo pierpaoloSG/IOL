@@ -1,4 +1,4 @@
-//<script>
+<script>
 
 function start(){ 
     console.log('start')
@@ -6,68 +6,216 @@ function start(){
     createTableDiffide()
 }
 
-$(document).ready(function() {
 
+$(document).ready(function(){
+
+//controlla il click su tableFilesHeader
+
+      $("#tableFilesHeader" ).on('click', function(){  
+      var $table = $("#tableFiles")
+      var $checkAll = $("#tableFilesHeader").find(".checkAll")
+      var $checkSingles = $table.find("input[type=checkbox]").not(".checkAll")
+      var $checkSinglesVisible = $checkSingles.not(":hidden")
+      var $checkSinglesChecked = $table.find("input[type=checkbox]:checked").not(".checkAll")
+      var $checkSinglesCheckedVisible = $checkSinglesChecked.not(":hidden")
+      var $notChecked = $checkSingles.not(":checked");
+      
+      //gestisce il change di checkAll
+      $checkAll.change(function () {
+      var $checkSingleVisible = $checkSingles.not(":hidden")
+          $checkSinglesVisible.each(function(i) {
+          $(this).prop("checked", $checkAll.prop("checked"));
+      })
+      
+      $checkSinglesChecked = $table.find("input[type=checkbox]:checked").not(".checkAll")
+     
+      if ( $checkSinglesChecked.length >0){
+          $("#import").prop("disabled", false)
+      }
+      else
+      {
+          $("#import").prop("disabled", true)
+       
+      }
+      
+         $("#filesChecked").html($checkSinglesChecked.length)
+      })
+      
+  })
+         
 //controlla il click su tableFiles
 
-      $("#tableFiles").on('click', function(){
-                    
-      //gestisce il change di checkedAll
-        $("#checkedAll").change(function(){
-          if(this.checked){
-            $(".checkSingle").each(function(){
-              this.checked=true;
-            })              
-          }else{
-            $(".checkSingle").each(function(){
-              this.checked=false;
-            })              
-          }
-        });
-    
+      $("#tableFiles" ).on('click', function(){  
+      var $table = $(this)
+      var $checkAll = $("#tableFilesHeader").find(".checkAll")
+      var $checkSingles = $table.find("input[type=checkbox]").not(".checkAll")
+      var $checkSinglesVisible = $checkSingles.not(":hidden")
+      var $checkSinglesChecked = $table.find("input[type=checkbox]:checked").not(".checkAll")
+      var $checkSinglesCheckedVisible = $checkSinglesChecked.not(":hidden")
+      var $notChecked = $checkSingles.not(":checked");
+      
+      //gestisce il change di checkSingle 
+      $checkSingles.change(function () { 
+      
+      $checkSinglesChecked = $table.find("input[type=checkbox]:checked").not(".checkAll")
+      $checkSinglesVisible = $checkSingles.not(":hidden")
+      if ($checkSinglesChecked.length >0){
+          $("#import").prop("disabled", false)
+      }
+      else
+      {
+          $("#import").prop("disabled", true) 
+      }
+      $("#filesChecked").html($checkSinglesChecked.length)
+      
+      if ($checkSinglesChecked.length == $checkSinglesVisible.length){
+          $checkAll.prop("checked", true)
+      }
+      else
+      {
+         $checkAll.prop("checked", false)
+      }
 
-    //gestisce il change di checkedSingle  
-    
-    $(".checkSingle").change(function () {
-            if ($(this).is(":checked")){
-            var isAllChecked = 0;
-            $(".checkSingle").each(function(){
-              if(!this.checked)
-                 isAllChecked = 1;
-            })              
-            if(isAllChecked == 0){ 
-              $("#checkedAll").prop("checked", true); 
-              }     
-          }
-          else {
-            $("#checkedAll").prop("checked", false);
-          };
+      })
+      
+   
+      })
+      
+      
+      $("#tableDiffide" ).on('click', function(){  
+            var $table = $(this)
+            var $checkAll = $table.find(".checkAll")
+            var $checkSingles = $table.find("input[type=checkbox]").not(".checkAll")
+            var $checkSinglesVisible = $checkSingles.not(":hidden")
+            var $checkSinglesChecked = $table.find("input[type=checkbox]:checked").not(".checkAll")
+            var $checkSinglesCheckedVisible = $checkSinglesChecked.not(":hidden")
+            var $notChecked = $checkSingles.not(":checked");
+            
+            
+            //*****************************************
+            //gestisce il change di checkSingle 
+            
+            $checkSingles.change(function () { 
+            $checkSinglesChecked = $table.find("input[type=checkbox]:checked").not(".checkAll")
+            $checkSinglesVisible = $checkSingles.not(":hidden")
+            if ($checkSinglesChecked.length >0){
+                $("#print").prop("disabled", false)
+                //$("#export").prop("disabled", false) il pulsante esporta è sempre abilitato
+            }
+            else
+            {
+                $("#print").prop("disabled", true) 
+                //$("#export").prop("disabled", true)  il pulsante esporta è sempre abilitato
+            }
+            var $checkSinglesCheckedVisible = $checkSinglesChecked.not(":hidden")
+            $("#praticheChecked").html($checkSinglesCheckedVisible.length)
+            
+            if ($checkSinglesChecked.length == $checkSinglesVisible.length){
+                $checkAll.prop("checked", true)
+            }
+            else
+            {
+               $checkAll.prop("checked", false)
+            }
+            
+            })
+            
+            //*****************************************
+            
+        //gestisce il change di checkAll
+            $checkAll.change(function () {              
+                  var $checkSingleVisible = $checkSingles.not(":hidden")
+                  $checkSinglesVisible.each(function(i) {
+                        $(this).prop("checked", $checkAll.prop("checked"));
+                  })
+                  
+                  var  $checkSinglesChecked = $table.find("input[type=checkbox]:checked").not(".checkAll")
+            
+                 
+                  if ( $checkSinglesChecked.length >0){
+                      $("#print").prop("disabled", false)
+                  }
+                  else
+                  {
+                      $("#print").prop("disabled", true)
+                  }
+                     $("#praticheChecked").html($checkSinglesVisible.length)
+            })
+                        
+        })
+            
+       // button Filter // essendo annidato nel click listener della table è necessario cliccare 2 volte 
+              $('.filterable .btn-filter').click(function(){
+              
+              var $panel = $(this).parents('.filterable'),
+              $filters = $panel.find('.filters input'),
+              $tbody = $panel.find('.table tbody'),
+              $checkboxesChecked = $tbody.find("input[type=checkbox]:checked")
+              $("#praticheVisible").html($checkboxesChecked.length)
+              console.log( $checkboxesChecked.length)
+      
+              if ($filters.prop('disabled') === true) {
+                  $filters.prop('disabled', false);
+                  
+              } else {
+                  $filters.val('').prop('disabled', true);
+                  
+                  $tbody.find('.no-result').remove();
+                  $tbody.find('tr').show();
+              }
+      });
+
+
+    $('.filterable .filters input').not('#range').keyup(function(e){
+        // Ignore tab key 
+        var code = e.keyCode || e.which;
+        if (code == '9') return;
+        // if esc is pressed we want to clear the value of search box
+        if (code == 27 || $(this).val() == '') {
+        $(this).val('');
+        }
+        // Useful DOM data and selectors 
+        var $input = $(this),
+        inputContent = $input.val().toLowerCase(),  // la stringa immessa nel filtro
+        $panel = $input.parents('.filterable'),
+        column = $panel.find('.filters th').index($input.parents('th')),
+        $table = $panel.find('.table'),
+        $rows = $table.find('tbody tr');
+        
+        // Dirtiest filter function ever ;) 
+        var $filteredRows = $rows.filter(function(){
+            var value = $(this).find('td').eq(column).text().toLowerCase();
+            return value.indexOf(inputContent) === -1;
         });
-       })    
- // chiude il controllo della table      
- 
-       
-//aggiorna la tableFiles (deve stare fuori dal .on della table
+        
+        console.log('righe filtrate: ' + $filteredRows.length)
+        
+        // Clean previous no-result if exist 
+        $table.find('tbody .no-result').remove();
+        // Show all rows, hide filtered ones    
+        $rows.show();
+        $filteredRows.hide();
+        var praticheVisible = $rows.length - $filteredRows.length 
+        $("#praticheVisible").html(praticheVisible)
+        //Prepend no-result row if all rows are filtered 
+        if ($filteredRows.length === $rows.length) {
+            $table.find('tbody').prepend($('<tr class="no-result text-center"><td colspan="'+ $table.find('.filters th').length +'">No result found</td></tr>'));
+        }
+    }); 
+
+
+
   
   $("#refreshTableFiles").click(function(){
       console.log('aggiorna la tabella')
-         var $icon = $(this).find( ".glyphicon.glyphicon-repeat" );
-                    if($icon.hasClass('glyphicon-repeat')) {
-                        $icon.removeClass('glyphicon-repeat')
-                        $icon.addClass('glyphicon-refresh')
-                        $icon.addClass('glyphicon-refresh-animate')
-                        // setTimeout is to indicate some async operation
-                        window.setTimeout( function() {
-                           $icon.removeClass('glyphicon-refresh')
-                            $icon.removeClass('glyphicon-refresh-animate')
-                            $icon.addClass('glyphicon-repeat')
-                        }, 10000 );
-      console.log('launch createTableFiles')
-      }
-      createTableFiles()
+         var $icon = $('#refreshTableFiles > span');
+         $icon.removeClass('glyphicon-repeat')
+         $icon.addClass('glyphicon-refresh')
+         $icon.addClass('glyphicon-refresh-animate')
+         createTableFiles()
 
   });
-  
+
    $('#import').on('click', function (e) {
               console.log('import clicked')
               // le checkbox non contengono l'attributo require, quindi il controllo viene fatto qui !
@@ -78,15 +226,12 @@ $(document).ready(function() {
                   return false
                   // è necessario selezionare almeno un file
                 }
-                $('#importOutput').html('')
                   // importa i dati dai file di affido selezionati
                   // gestisce l'animazione dell'icona del button importa
-                  var $icon = $( this ).find( ".glyphicon.glyphicon-import" );
-                    if($icon.hasClass('glyphicon-import')) {
+                  var $icon = $( '#import > span' );
                         $icon.removeClass('glyphicon-import')
                         $icon.addClass('glyphicon-refresh')
                         $icon.addClass('glyphicon-refresh-animate')
-                       }
                  //compone l'array dei files selezionati
                  var files = []
                  var filesObj = {}
@@ -102,18 +247,30 @@ $(document).ready(function() {
                  
                   //legge i dati dai files di affido selezionati
                   console.log("files " + JSON.stringify(files))
+                  $('#outputPanelText').empty()
                   google.script.run
                     .withSuccessHandler(onReadDiffide)
                     .withFailureHandler(onError2)
                     .readDiffideFromFiles(files)    
                   return false
           })
-                function onReadDiffide(objDiffideDaInviare){
-                    console.log('dati scritti su sheet')
+                function onReadDiffide(results){
+
+                    var objDiffideDaInviare = results[0]
+                    var dataImportazioneAffido = results[1]
+                    var objErrors = results[2]
+                    var logRateiFattura = results[3]
+                    var outputMessage
+                    
+                      for (var i=0; i<objErrors.length; i++){
+                           outputMessage =+ objErrors[i] + "\n"
+                      }
+           
+                    //$('#outputPanelText').append(outputMessage)
                     // ricrea la tabella dei files aggiornata 
                     createTableFiles() 
                     // crea la tabella diffide
-                       var $icon = $('#print')
+                       var $icon = $('#refreshTableFiles')
                        $icon.removeClass('glyphicon-refresh')
                        $icon.removeClass('glyphicon-refresh-animate')
                        $icon.addClass('glyphicon-import')
@@ -125,221 +282,81 @@ $(document).ready(function() {
                   $('#outputPanelText').append(JSON.stringify(err))
                  }         
  
- 
+
+//********************************************************
   $('#print').on('click', function (e) {
+     
       var objDiffide = {
         'Data invio':''}
       var diffide = []
-      
-      console.log(objDiffide)
-      var checkboxes = $("input.checkSingleDiffide:checked");
-      console.log(checkboxes)
-      $(checkboxes).each(function(x){
-            var selected = $(this).closest('tr').find('td').eq(1).html() 
-            diffide.push(selected)
-            console.log(x + ' ' + diffide[x])
-      }); 
-      objDiffide.diffide = diffide
-      console.log(objDiffide)
-      console.log('print clicked')
-      $('#dateModal').modal('show')
-      $('#send').on('click', {objDiffide},  function (e) {
-        console.log('send clicked')
-        objDiffide['Data invio'] = $("#dataInvio").find("input").val()
-        console.log(objDiffide)
-        if ($("#checkboxDiffide").is(':checked')){
-           var runPrintDiffide = true
-           console.log('printDiffide: ' + runPrintDiffide)
-           $("input.checkSingleDiffide").prop('checked', false)
-           showLoader()
-           printDiffide(objDiffide)
-           diffide = []
-        }
-        else
-        {
-          var runPrintDiffide = false
-        }
-        // STAMPA ETICHETTE DISATTIVA
-//        if ($("#checkboxLabels").is(':checked')){
-//           var runPrintLabels = true
-//           console.log('printLabels: '+ runPrintLabels)
-//           showLoader()
-//           printLabels(objDiffide)
-//        }
-//        else
-//        {
-//          var runPrintLabels = false
-//        }
-      })
- });
+      var checkSinglesVisibleChecked = $("input.checkSingle:visible:checked");
+      $(checkSinglesVisibleChecked).each(function(){
+            //var selected = $(this).closest('tr').find('td').eq(1).html() 
+            if ($(this).closest('tr').find("td").eq(3).html() == ""){
+                var toPrint = $(this).closest('tr').find('td').eq(1).html()
+                diffide.push(toPrint)
+            }
             
-
-   
-
-//check click on tableDiffide
-
-   $("#tableDiffide").on('click', function(){
-   
-   //manage change on checkedAllDiffide
-      $("#checkedAllDiffide").change(function(){
-        if(this.checked){
-          $(".checkSingleDiffide").each(function(){
-            this.checked=true;
-            $("#print").removeAttr('disabled')
-          })              
-        }else{
-          $(".checkSingleDiffide").each(function(){
-            this.checked=false;
-            $("#print").prop('disabled', true)
-          })              
-        }   
       });
       
-
-//manage change on checkedSingleDiffide  
-    $(".checkSingleDiffide").change(function () {
-        if ($(this).is(":checked")){
-           $("#print").removeAttr('disabled')
-           var isAllChecked = 0;
-        $(".checkSingleDiffide").each(function(){
-          if(!this.checked)
-             isAllChecked = 1;
-        })
-        if(isAllChecked == 0){ 
-          $("#checkedAllDiffide").prop("checked", true); 
-        }
-      }
-      else {
-        $("#checkedAllDiffide").prop("checked", false);
-        $("#print").prop('disabled', true)
-      }  
-    });    
-});
-   
-
-     
-
-
- // button Filter
-        $('.filterable .btn-filter').click(function(){
-
-        var $panel = $(this).parents('.filterable'),
-        $filters = $panel.find('.filters input'),
-        $tbody = $panel.find('.table tbody');
-        if ($filters.prop('disabled') === true) {
-            $filters.prop('disabled', false);
-//            var selectHtml = '<label>Data importazione</label><select id="FiltroData" class="selectpicker form-control" required></select>'
-//            $('#tableDiffide > thead > tr > th:nth-child(9)').html(selectHtml)
-            $filters.first().focus();
-        } else {
-            $filters.val('').prop('disabled', true);
-            $tbody.find('.no-result').remove();
-            $tbody.find('tr').show();
-        }
-    });
+      objDiffide.diffide = diffide.reverse()
+      console.log((objDiffide.diffide).length + ' diffide to print: ' + objDiffide.diffide)
+      openDateModal(objDiffide)
+      
+    })
     
-     $('#range').blur(function(e){
-        /* Ignore tab key */
-        var code = e.keyCode || e.which;
-        if (code == '9') return;
-        /* if esc is pressed we want to clear the value of search bo */
-        if (code == 27 || $(this).val() == '') {
-        $(this).val('');
-        }
-        /* Useful DOM data and selectors */
-        var $input = $(this),
-        rangeArray = $input.val().toLowerCase().split("-"),
-        $panel = $input.parents('.filterable'),
-        column = $panel.find('.filters th').index($input.parents('th')),
-        $table = $panel.find('.table'),
-        $rows = $table.find('tbody tr')
-        /* filter function ;) */
-        var $filteredRows = $rows.filter(function(){
-            var $t = $(this);
-            for (var i = rangeArray[0]; i < rangeArray[0]; ++i) {
-              if ($t.is(":contains('" +i+ "')")) {
-              return true;
-            }
-        }
-        return false;
-        })
-        console.log(JSON.stringify("righe filtrate " + $filteredRows))  
-        /* Clean previous no-result if exist */
-        $table.find('tbody .no-result').remove();
-        /* Show all rows, hide filtered ones (never do that outside of a demo ! xD) */
-        $rows.show();
-        $filteredRows.hide();
-        /* Prepend no-result row if all rows are filtered */
-        if ($filteredRows.length === $rows.length) {
-            $table.find('tbody').prepend($('<tr class="no-result text-center"><td colspan="'+ $table.find('.filters th').length +'">No result found</td></tr>'));
-        }
-    }); 
-  
-
-    $('.filterable .filters input').not('#range').keyup(function(e){
-        /* Ignore tab key */
-        var code = e.keyCode || e.which;
-        if (code == '9') return;
-        //if esc is pressed we want to clear the value of search box
-        if (code == 27 || $(this).val() == '') {
-        $(this).val('');
-        }
-        /* Useful DOM data and selectors */
-        var $input = $(this),
-        inputContent = $input.val().toLowerCase(),
-        $panel = $input.parents('.filterable'),
-        column = $panel.find('.filters th').index($input.parents('th')),
-        $table = $panel.find('.table'),
-        $rows = $table.find('tbody tr');
-        console.log(inputContent)
-        /* Dirtiest filter function ever ;) */
-        var $filteredRows = $rows.filter(function(){
-            var value = $(this).find('td').eq(column).text().toLowerCase();
-            return value.indexOf(inputContent) === -1;
-        });
-        /* Clean previous no-result if exist */
-        $table.find('tbody .no-result').remove();
-        /* Show all rows, hide filtered ones (never do that outside of a demo ! xD) */    
-        $rows.show();
-        $filteredRows.hide();
-        /* Prepend no-result row if all rows are filtered */
-        if ($filteredRows.length === $rows.length) {
-            $table.find('tbody').prepend($('<tr class="no-result text-center"><td colspan="'+ $table.find('.filters th').length +'">No result found</td></tr>'));
-        }
-    }); 
-   
-  
-    function printDiffide(objDiffide){
-      console.log('printDiffide')
-      //var objDiffide = JSON.parse(JSONObjDiffide)
-      console.log(objDiffide)
+  function openDateModal(objDiffide){
+      //$('#outputPanelText').empty() // svuota il pannello risultati
+      $('#dateModal').modal('show')
+      console.log('dateModal show')
+      //$('#formDateModal').validator()
+         $("#formDateModal").on('submit', function(e){
+                     if (e.isDefaultPrevented()) {
+                         // se l'invio del form è stato prevenuto mostra un messaggio ed evita di eseguire le operazioni
+                         // che risulterebbero in più
+                         console.log('Il form inviato non è valido')
+                        
+                    } else {
+                        $('#dateModal').modal('hide')
+                      console.log('print diffide ' + JSON.stringify(objDiffide))
+                      objDiffide['Data invio'] = $("#dataInvio").find("input").val()
+                      if ($("#checkboxDiffide").is(':checked')){
+                            printDiffide(objDiffide)     
+                            diffide = []
+                            return false
+                      }
+                      
+                   }
+                     
+          })
+ }
+ 
+  function printDiffide(objDiffide){
+  console.log('printDiffide ')
+  var $icon = $('#print-span')
+              $icon.removeClass('glyphicon-print')
+              $icon.addClass('glyphicon-refresh')
+              $icon.addClass('glyphicon-refresh-animate')
       google.script.run
-      .withSuccessHandler(onPrintedDiffide)
+      .withSuccessHandler(onRetrievedDiffide)
       .withFailureHandler(onErrorPrinting)
       .retrieveDiffide(objDiffide)    
       return false
     }
       
-      function onPrintedDiffide(results){   
-        //var results = JSON.parse(resultsToParse)
+      function onRetrievedDiffide(results){   
         console.log('diffide printed')
-        var $icon = $('#print')
-        $icon.removeClass('glyphicon-refresh')
-        $icon.removeClass('glyphicon-refresh-animate')
-        $icon.addClass('glyphicon-print')
+        var $icon = $('#print-span')
+
         var outputMessage
         var resultDate = moment().format("DD/MM/YYYY h:mm:ss ")
-        
-        if (results[0]>1){
-           resultMessage = results[0] + ' diffide correttamente stampate sul seguente file: \n'
-        }
-        else{
-           resultMessage = results[0] + ' diffida correttamente stampata sul seguente documento: \n'
-        }
-           outputMessage = resultDate + "- " + resultMessage +  '<a href="'+results[1]+'" target="_blank">' +results[2]+ '</a><br>'
-           outputMessage += resultDate + "- Lista di controllo: "  + '<a href="'+results[3]+'" target="_blank">' +results[4]+ '</a><br>'
+        console.log(results[1])
+        console.log(results[2])
+           var resultMessage = (results[0] == 1) ? ' diffida correttamente stampata ':' diffide correttamente stampate ' 
+           outputMessage = "<p> " + resultDate + " - " + results[0] + " " + resultMessage +  " sul seguente documento: \n" +  "<a href='" +results[1]+"' target='_blank'>" +results[2]+ "</a><br>"
+           outputMessage += resultDate + "- Lista di controllo: <a href='" +results[3]+"' target='_blank'>" +results[4]+ "</a><br>"
            //aggiorna la tabella diffide
-           console.log(outputMessage)
+           createTableDiffide()
         $('#outputPanelText').append(outputMessage)
       }
       
@@ -347,55 +364,180 @@ $(document).ready(function() {
         console.log(err)
         $('#outputPanelText').append('Non è stato possibile stampare le diffide selezionate: ' + err)
       }
-                 
-       function printLabels(objDiffide){
-      console.log('printDiffide')
-      //var objDiffide = JSON.parse(JSONObjDiffide)
-      console.log(objDiffide)
+ 
+ //********************************************************
+ 
+  $('#insertExFlusso').on('click', function (e) {
+
+      $('#exFlussoModal').modal('show');
+      $('#formExFlusso').validator()
+      $('#formExFlusso').on('submit', function(e){
+         if (e.isDefaultPrevented()) {
+               // se l'invio del form è stato prevenuto mostra un messaggio ed evita di eseguire le operazioni
+               // che risulterebbero in più
+               console.log('Il form inviato non è valido')
+              
+          } else {
+
+         $('#exFlussoModal').modal('hide')
+         var objExFlusso = $('#formExFlusso').serializeJSON()
+         console.log(objExFlusso)
+         sendExFlusso(objExFlusso)
+         return false
+       }
+      }); 
+  })
+
+//*********************************************
+
+//sendExFlusso - inserisce exFlusso
+
+function sendExFlusso(objExFlusso){
+console.log('sendExFlusso')
+google.script.run
+  .withSuccessHandler(onSentExFlusso)
+  .withFailureHandler(onErrorExFlusso)
+  .insertExFlusso(objExFlusso)
+}
+
+function onSentExFlusso(message){
+    createTableDiffide()
+
+}
+
+
+  function onErrorExFlusso(message){
+ 
+     console.log(message)
+ 
+   }
+
+
+//********************************************************************* 
+
+  $('#export').on('click', function (e) {
+     console.log('export Diffide')
+     //aggiorna la tabella visualizzata
+     createTableDiffide()
+     setTimeout(function(){}, 2000);
+      var objDiffide = {
+        'Data esportazione':''}
+      var diffide = []
+      //var checkSinglesVisibleChecked = $("input.checkSingle:visible:checked");
+      // var noExported = $(this).closest('tr').find('td').eq(9).html() 
+      var $rows = $('#tableDiffide tr').not('thead tr')
+      var $Sent = $rows.filter(function() {
+          return $(this).find('td').eq(9).html()=='Inviata'
+      });
+        var $noSent = $rows.filter(function() {
+          return $(this).find('td').eq(9).html()!='Inviata'
+      });
+        var $noExported = $rows.filter(function() {
+          return $(this).find('td').eq(12).html()==''
+      });
+      var toMark = []
+      $($noExported).each(function(){
+            var parts = $(this).closest('tr').find('td').eq(2).html().split("/");     
+            var flusso = parts[parts.length - 1]; // Or parts.pop();
+            console.log(flusso)
+            //se diversa da IOL 
+            if (flusso != "IOL" ){
+               // se non ancora inviata viene evidenziata in rosso
+               if ($(this).find('td').eq(9).html()=='Inviata'){
+                  var $IDtoExport = $(this).closest('tr').find('td').eq(1).html()
+                  diffide.push($IDtoExport)
+               }
+            }  
+      });
+
+//      console.log('pratiche inviate ' + $Sent.length)
+//      console.log('pratiche non inviate ' + $noSent.length)
+//      console.log('pratiche da esportare ' + diffide.length )
+//     
+
+
+      var now = moment(new Date()).format("DD/MM/YYYY")
+      if (diffide.length == 0) {
+        var outputMessage = now +': Non risultano pratiche da esportare.' 
+        $('#outputPanelText').html(outputMessage)
+        return false
+      }
+      
+      outputMessage = (diffide.length  == 1) ? '1 pratica da esportare ': diffide.length  + ' pratiche da esportare\n'
+      
+      objDiffide.diffide = diffide.reverse() 
+      var outputMessage = '<p>' + now +': ' + outputMessage+'</p>'
+      $('#outputPanelText').html(outputMessage)
+        var $icon = $('#export > span')
+        $icon.removeClass('glyphicon-export')
+        $icon.addClass('glyphicon-refresh glyphicon-refresh-animate')
+        //$icon.addClass('glyphicon-refresh-animate')
+      exportDiffide(objDiffide)
+      })
+ 
+ function exportDiffide(objDiffide){
+  console.log('exportDiffide ')
+      var $icon = $('#export > span')
+        $icon.removeClass('glyphicon-export')
+        $icon.addClass('glyphicon-refresh')
+        $icon.addClass('glyphicon-refresh-animate')
       google.script.run
-      .withSuccessHandler(onPrintedLabels)
-      .withFailureHandler(onErrorPrintingLabels)
-      .retrieveAddresses(objDiffide)    
-      showLoader()
+      .withSuccessHandler(onExportedDiffide)
+      .withFailureHandler(onErrorExporting)
+      .exportDiffide(objDiffide)    
       return false
     }
       
-      function onPrintedLabels(results){   
-       console.log('labels printed')
-       var $icon = $('#print')
-       $icon.removeClass('glyphicon-refresh')
-       $icon.removeClass('glyphicon-refresh-animate')
-       $icon.addClass('glyphicon-print')
+      function onExportedDiffide(results){   
+        console.log('results: ' + results)
+        console.log('diffide exported')
+        var $icon = $('#export > span.glyphicon.glyphicon-refresh.glyphicon-refresh-animate')
+        $icon.removeClass('glyphicon-refresh')
+        $icon.removeClass('glyphicon-refresh-animate')
+        $icon.addClass('glyphicon-export')
         var outputMessage
         var resultDate = moment().format("DD/MM/YYYY h:mm:ss ")
-        if (results[0]>1){
-           resultMessage = results[0] + ' etichette correttamente stampate sul seguente file: \n'
-        }
-        else{
-           resultMessage = results[0] + ' etichetta correttamente stampata sul seguente documento: \n'
-        }
-        outputMessage = resultDate + ' - ' + resultMessage + '<a href="'+ results[1]+'" target="_blank">' +results[2]+ '</a><br>'
-        $('#outputPanelText').append(outputMessage)
+
+           var resultMessage = (results[0] == 1) ? results[0] + ' pratica correttamente esportata ': results[0] + ' pratiche correttamente esportate ' 
+           outputMessage = "<p>" + resultDate + ""
+           outputMessage += resultMessage + "sui seguenti files:<br>" +  "<a href='" + results[1] + "' target='_blank'>Testata Pratiche</a><br>"
+           outputMessage += "<a href='" +results[2]+"' target='_blank'>Recapiti</a><br>"
+           outputMessage += "<a href='" +results[3]+"' target='_blank'>Lettere</a><br>"
+           outputMessage += "<a href='" +results[4]+"' target='_blank'>Dettagli fatture</a><br>"
+           //aggiorna la tabella diffide
+           console.log(outputMessage)
+           createTableDiffide()
+        $('#outputPanelText').html(outputMessage)
       }
       
-      function onErrorPrintingLabels(err){
+      function onErrorExporting(err){
         console.log(err)
-        $('#printOutput').append('Non è stato possibile stampare le etichette per le diffide selezionate')
+        $('#outputPanelText').append('Si è verificato un errore in fase di esportazione delle diffide: ' + err)
       }
-     $('#range').blur(function(e){
-        var range = $('#range').val()
-        console.log(range)
-     });
+ 
+ 
+ //**********************************************************************
+    $('#unDoLast').on('click', function (e) {
+      var dates = []
+      var colImportDate = $('#tableDiffide tr td:nth-child(10)') 
+      var lastImport = Math.max.apply(Math, colImportDate.map(function(){
+            var date = $(this).text()
+            dates.push(date)
+      return $(this).text()
+      }))
+      var lastImportDate = dates.reduce(function (a, b) { return a > b ? a : b; })
+      $('#confirmModal').modal('show');
+        $('#confirmOk').click(function(){
+        console.log(lastImportDate)
+        undoLastImport(lastImportDate)
+        $('#confirmModal').modal('hide')
+        });
+      });              
 
-function showLoader(){
-                  // gestisce l'animazione dell'icona del button print
-                  var $icon = $('#print').find( ".glyphicon.glyphicon-print" );
-                    if($icon.hasClass('glyphicon-print')) {
-                        $icon.removeClass('glyphicon-print')
-                        $icon.addClass('glyphicon-refresh')
-                        $icon.addClass('glyphicon-refresh-animate')
-                        }
- }
+   }) // close document ready function
+    
+//*************************************************************************************                
+
 
 function createTableFiles(){
 console.log('createTableFiles')
@@ -412,16 +554,11 @@ console.log('createTableFiles')
  }
  
  function onImported(objFilesAffidi){
- console.log(objFilesAffidi)
- 
  var $icon = $('#refreshTableFiles')
        $icon.removeClass('glyphicon-refresh')
        $icon.removeClass('glyphicon-refresh-animate')
        $icon.addClass('glyphicon-repeat')
  var files = JSON.parse(objFilesAffidi)
- console.log("data")
- console.log(files)
- console.log("numero files= " + files.length)
  var myCheckbox = '' 
  var assegnati = 0
  var wroteOnTable = 0
@@ -431,7 +568,7 @@ console.log('createTableFiles')
  }
  else
  {
-    for (var i=0; i<files.length; i++){
+    for (var i=files.length-1; i>=0; i--){
         if (files[i]['Stato affido']){ //== 'Assegnato')
           assegnati++
           myCheckbox = '<label><input id="checkbox'+(i+1)+'" class="checkSingle" type="checkbox"></label>'
@@ -442,6 +579,7 @@ console.log('createTableFiles')
           tr.append("<td>" + files[i]['Stato affido'] + "</td>");
           tr.append("<td>" + moment(files[i]['Data assegnazione']).format("DD/MM/YYYY hh:mm:ss ") + "</td>");
           if (files[i].Badge!='new') {
+             
              if (files[i]['Data importazione']!='') {
               tr.append("<td>" + moment(files[i]['Data importazione']).format("DD/MM/YYYY hh:mm:ss ") + "</td>");
               }
@@ -450,17 +588,22 @@ console.log('createTableFiles')
               tr.append("<td></td>");
               }
              
-          } else
+          } 
+          else
           {  tr.append("<td> <span class='label label-info'>" + files[i].Badge + "</span> </td>");
+    
           }
           $('#tableFiles').append(tr);
           wroteOnTable++
         } 
     }
- }   
-  console.log('scritti in tabella ' + wroteOnTable) 
-  console.log('files assegnati ' + assegnati)   
-     var resultDate = moment().format("DD/MM/YYYY hh:mm:ss ")
+ }  
+ 
+     $("#filesVisible").html(files.length)
+     var checkSingleChecked = $(this).find(".checkSingle:checked")
+     $("#filesChecked").html(checkSingleChecked.length)
+          
+     var resultDate = moment().format("dd/MM/YYYY hh:mm:ss ")
      switch(assegnati) {
      case 0:
      resultMessage = 'Non risultano files assegnati ancora da gestire.\n'
@@ -477,6 +620,8 @@ console.log('createTableFiles')
 }
 
 
+//********************************************************
+
 // Crea la TableDiffide
 
 function createTableDiffide(){  
@@ -492,39 +637,40 @@ google.script.run
 // withSuccessHandler di readDiffideDaInviare
 
   function onReadDiffideDaInviare(objAllDiffideDaInviare){
-    var $icon = $( '#refreshTableFiles')
+    var $icon = $( '#refreshTableFiles >span')
       $icon.removeClass('glyphicon-refresh') 
+      $icon.removeClass('glyphicon-refresh-animate') 
       $icon.addClass('glyphicon-repeat')
-    var $icon = $( '#import')
-      $icon.removeClass('glyphicon-refresh') 
-      $icon.addClass('glyphicon-import')
-      
+   
     var diffide = JSON.parse(objAllDiffideDaInviare)
     console.log('DiffideDaInviare ')
-    console.log(diffide)
     $('#tableDiffide tbody').remove()
         var tr
         if (diffide.length > 0){
-          for (i=0; i<diffide.length; i++){
-          //console.log('diffide data importazione ' + diffide[i]['Data importazione'])
+          for (i=diffide.length-1; i>=0; i--){
           
-                var myCheckbox = '<div vcenter> <label> <input id="checkbox'+(i+1)+'" class="checkSingleDiffide" type="checkbox"> </label> </div>'
+                var myCheckbox = '<div vcenter> <label> <input class="checkSingle" type="checkbox"> </label> </div>'
                 tr = $('<tr>');
                 tr.append("<td >" + myCheckbox + "</td>");
                 tr.append("<td id='idDiffida' >" + diffide[i]['ID diffida'] + "</td>");
+                tr.append("<td >" + diffide[i]['Riferimento pratica']+"/"+diffide[i]['Tipologia flusso'] + "</td>");
                 
-                if (diffide[i]['Tipologia flusso']  == 'ERR'){
-                    tr.append("<td ><span class='label label-danger'>ERR</span></td>")
+                // crea badge nella colonna solo per pratiche ex-flusso
+                if ( diffide[i]['Tipologia pratica'] == 'OPPOSIZIONE' || diffide[i]['Tipologia pratica'] == 'FALLIMENTO' || diffide[i]['Tipologia pratica'] == 'CONCORDATO'){ 
+                    tr.append("<td ><span class='label label-warning'>" + diffide[i]['Tipologia pratica'] +"</span></td>");
+                }else
+                {
+                    tr.append("<td ></td>")
                 }
-                else{
-                    tr.append("<td >" + diffide[i]['Riferimento pratica']+"/"+diffide[i]['Tipologia flusso'] + "</td>");
-                }      
-                tr.append("<td >" + diffide[i]['Nome file affido'] + "</td>");
-                tr.append("<td >" + diffide[i]['Codice cliente'] + "</td>");
-                tr.append("<td >" + diffide[i]['Dato fiscale'] + "</td>");
-                tr.append("<td >" + diffide[i]['Ragione sociale'] + "</td>");
-                tr.append("<td >" + diffide[i]['Stato'] + "</td>");
-                tr.append("<td >" + moment(diffide[i]['Data importazione']).format("DD/MM/YYYY hh:mm:ss ") + "</td>");  
+                    tr.append("<td >" + diffide[i]['Nome file affido'] + "</td>");
+                    tr.append("<td >" + diffide[i]['Codice cliente'] + "</td>");
+                    tr.append("<td >" + diffide[i]['Partita IVA'] + "</td>");
+                    tr.append("<td >" + diffide[i]['Codice fiscale'] + "</td>");
+                    tr.append("<td >" + diffide[i]['Ragione sociale'] + "</td>");
+                    tr.append("<td >" + diffide[i]['Stato'] + "</td>");
+                    tr.append("<td >" + moment(diffide[i]['Data importazione']).format("DD/MM/YYYY hh:mm:ss ") + "</td>");
+                    //tr.append("<td >" + diffide[i]['Data importazione'] + "</td>")
+                    
                 if (diffide[i]['Data stampa']!='') {
                           tr.append("<td>" + moment(diffide[i]['Data stampa']).format("DD/MM/YYYY hh:mm:ss ") + "</td>");
                 }
@@ -532,24 +678,46 @@ google.script.run
                 {
                      tr.append("<td></td>");
                 }
-                if (diffide[i]['Data invio']!='') {
-                     tr.append("<td>" + moment(diffide[i]['Data invio']).format("DD/MM/YYYY") + "</td>");
+                if (diffide[i]['Data esportazione']!='') {
+                     console.log(diffide[i]['Data esportazione'])
+                     tr.append("<td>" + moment(diffide[i]['Data esportazione']).format("DD/MM/YYYY hh:mm:ss") + "</td>");
                 }
                 else
                 {
                      tr.append("<td></td>");
                 }
+                
+                 if (diffide[i]['Data invio']!='') {
+                     tr.append("<td >" + moment(diffide[i]['Data invio']).format("DD/MM/YYYY") + "</td>");
+                }
+                else
+                {
+                     tr.append("<td></td>");
+                }
+                 
                
                 $('#tableDiffide').append(tr);  
           }
           console.log('table diffide created')
+          
+           var $icon = $( '#import> span')
+            $icon.removeClass('glyphicon-refresh') 
+            $icon.removeClass('glyphicon-refresh-animate') 
+            $icon.addClass('glyphicon-import') 
+            
+            var $icon = $( '#print-span> span')
+              $icon.removeClass('glyphicon-refresh') 
+              $icon.removeClass('glyphicon-refresh-animate') 
+              $icon.addClass('glyphicon-print')
+              
+          $("#praticheVisible").html(diffide.length)
+          var checkSingleChecked = $(this).find(".checkSingle:checked")
+          $("#praticheChecked").html(checkSingleChecked.length)
           var colImportDate = $('#tableDiffide tr td:nth-child(9)')        
           var high = Math.max.apply(Math, colImportDate.map(function(){
              var date = $(this).text()
-               console.log(date)
              return $(this).text()
            }))
-          //console.log(high)
         }
         else
         {
@@ -561,6 +729,33 @@ google.script.run
 function onErrorImporting(err){
      console.log(err)
 }
+
+
+//**************************
+//unDoLastImport - cancella l'ultima importazione
+
+function undoLastImport(lastImportDate){
+
+console.log('undoLastImport')
+//legge i files affidi da importare presenti su folder
+  google.script.run
+    .withSuccessHandler(onUndoSuccess)
+    .withFailureHandler(onFailure)
+    .deleteLastImportedDiffide(lastImportDate)
+ }
+ 
+// function onFailure(error) {
+//        var div = document.getElementById('outputPanelText');
+//        div.innerHTML = "ERROR: " + error.message;
+// }
+// 
+ function onUndoSuccess(message){
+ 
+ console.log(message)
+ 
+ }
+ 
+
 </script>
 
 

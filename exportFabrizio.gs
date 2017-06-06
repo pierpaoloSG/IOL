@@ -5,6 +5,9 @@ function exportDiffide(objDiffide){
     return el['Tipologia flusso'] != 'IOL' 
   });
 */  
+
+//Crea le tabelle da importare nel gestionale di Fabrizio
+
 Logger.log('Export Diffide')
 Logger.log(objDiffide)
 
@@ -30,22 +33,27 @@ var objData = []
 Logger.log(arrayDiffideDaInviare)
 for (var i=0; i<arrayDiffideDaInviare.length; i++)  {
     for (var record in objDiffideDaInviare){
-      if (objDiffideDaInviare[record]['ID diffida'] == arrayDiffideDaInviare[i] ){
+      if ((objDiffideDaInviare[record]['ID diffida'] == arrayDiffideDaInviare[i]) && (objDiffideDaInviare[record]['Stato'] == 'Inviata' )){
             // crea l'oggetto per la diffida trovata
             objDataRow = objDiffideDaInviare[record]
             //objDataRow['Data importazione'] = dataImportazione   
             objDataRow['Data esportazione'] = dataExport                                                  
             objDataRow['Stato'] = 'Esportata'
+            count++
+            Logger.log(count)
+            Logger.log(objDataRow)
+            objData.push(objDataRow)
       }
   }
-  count++
-  Logger.log(count)
-  objData.push(objDataRow)
+
 }
 
 Logger.log('numero diffide da esportare ' + objData.length)
 Logger.log('diffide da esportare ')
+Logger.log('objData')
 Logger.log(objData)
+Logger.log(objData.length)
+
   // esporta le diffide da inviare su testate pratiche per Fabrizio
   Logger.log('exportTestataPratiche')
  var objDiffideToExport = objData
@@ -71,7 +79,7 @@ Logger.log(objData)
     testata[8] = objDiffideToExport[i]['Provincia'] 
     testata[9] = objDiffideToExport[i]['Nazione'] = 'Italia' // manca in tabella
     testata[10] = objDiffideToExport[i]['Riferimento pratica'] + '/' + objDiffideToExport[i]['Tipologia flusso']
-    testata[11] = objDiffideToExport[i]['Data importazione'] // affido del (viene esportato su google doc in formato data)
+    testata[11] = Utilities.formatDate(objDiffideToExport[i]['Data importazione'], 'CET', '#yyyy-MM-dd#') // affido del (viene esportato su google doc in formato data)
     testata[12] = objDiffideToExport[i]['Codice cliente'] // CodiceCliente
     testata[13] = objDiffideToExport[i]['Codice fiscale'] // CodiceFiscale
     testata[14] = objDiffideToExport[i]['Partita IVA'] // CodiceFiscale
@@ -125,10 +133,13 @@ Logger.log(objData)
     //ObjDB.insertRow( db, 'recapiti', addressOuter )
     
     // export Lettere
+    //Logger.log(convertObjDataToText(objDiffideToExport[i]['Data invio']))
+    var dataInvio = Utilities.formatDate(new Date(objDiffideToExport[i]['Data invio']), 'CET', '#yyyy-MM-dd#')
+    Logger.log(dataInvio)
     
     lettere  = [,,,,]
     lettere[0] = 'in uscita' // Tipologia
-    lettere[1] = '#' + objDiffideToExport[i]['Data invio'] + '#' // Data //
+    lettere[1] = dataInvio // Data //
     lettere[2] = 'Inviata' // Status
     lettere[3] = objDiffideToExport[i]['Codice cliente'] // CodiceCliente
 
@@ -172,8 +183,7 @@ Logger.log(objData)
              Logger.log(typeof(importo))
              
              if (fattureSheetFiltered[j]['Data emissione']!=''){
-               var dateFormatted = Utilities.formatDate(new Date(fattureSheetFiltered[j]['Data emissione']), 'CET', 'dd/MM/YYYY') 
-               var dataFattura = '#'+dateFormatted+'#'
+               var dataFattura = Utilities.formatDate(new Date(fattureSheetFiltered[j]['Data emissione']), 'CET', '#yyyy-MM-dd#') 
              }
              else
              {
@@ -212,7 +222,7 @@ Logger.log(objData)
   removeEmptyRows(sheetExportDettagliFatture)
   updateSheets(objDiffideToExport)
   //ObjDB.insertRow( db, 'dettagli fatture', fattureOuter )
-  var results = [objDiffideToExport.length, urlExportTestataPratiche,urlExportRecapiti,urlExportLettere,urlExportDettagliFatture]
+  var results = [objData.length, urlExportTestataPratiche,urlExportRecapiti,urlExportLettere,urlExportDettagliFatture]
   return results
 }
   
