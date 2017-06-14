@@ -1,38 +1,47 @@
-/*
+
 
 // ***** IOL DEV ******
 
 //FOLDERS
 
-var affidiDaImportareFolderId = '0BznBNzYR5OHDWGFPSUNKWlpkQTA'
+// Affidi
+var affidiDaImportareFolderId = '0BznBNzYR5OHDa2M5U21tUkJzYTA'
 var affidiDaImportareFolder = DriveApp.getFolderById(affidiDaImportareFolderId)
 
-var affidiOriginaliFolderId = '0BznBNzYR5OHDVUpKVGYzTy0xeW8'
+var affidiOriginaliFolderId = '0BznBNzYR5OHDVGw3NTJsSTNIbVE'
 var affidiOriginaliFolder = DriveApp.getFolderById(affidiDaImportareFolderId)
 
+// Report
+var reportOriginaliFolderId = '0BznBNzYR5OHDd0FsajNfNWZNUU0'
+var reportOriginaliFolder = DriveApp.getFolderById(reportOriginaliFolderId)
+
+var reportConvertitiFolderId = '0BznBNzYR5OHDcE5mbWxfaXdGdnc'
+var reportConvertitiFolder = DriveApp.getFolderById(reportConvertitiFolderId)
+
+
 // Spreadsheet
-var urlDB = 'https://docs.google.com/spreadsheets/d/1aGkTllbkOmEaI9KB9i56ODmUSyH9u_Rs-uu-ytVcnbk/edit'
+var urlDB = 'https://docs.google.com/spreadsheets/d/1yWfXqFBqcliyMmr4yNcbIEh_86Dhfp3QW9d5dltqKAA/edit'
 var ssDB = SpreadsheetApp.openByUrl(urlDB)
-var ssDBID = '179OhQjvAQZ9QMYoXptBn2AcxSeWVmFtao3bOZAyXroE'
+var ssDBID = '1yWfXqFBqcliyMmr4yNcbIEh_86Dhfp3QW9d5dltqKAA'
 var sheetImpostazioni = ssDB.getSheetByName('Impostazioni')
 var sheetFilesAffidi = ssDB.getSheetByName('Files affidi')
+var sheetFilesReport = ssDB.getSheetByName('Files report')
 var sheetDiffideDaInviare = ssDB.getSheetByName('Diffide da inviare')
-var sheetDiffideInviate = ssDB.getSheetByName('Diffide inviate')
 var sheetDettaglioFatture = ssDB.getSheetByName('Dettaglio fatture')
 var sheetListaDiControllo = ssDB.getSheetByName('Lista di controllo')
-
+var sheetInfoLettere = ssDB.getSheetByName('Info Lettere')
 
 
 // STAMPA DIFFIDE
 IDTemplateDiffide = '19jxUUO7Jx6DZj8vTQ0IyzTEJbTW22HVgjlQB6UUWzOQ'
 IDTemplateEtichette = '1oIORY45a0o-6g_giDDVzlATl1q_T9o_EolszHox5mxg'
 IDTemplateListaDiControllo = '1HWlWgwnQkuViSpXQTM_1dp7rRXijA43FWf_3SmqCX_o'
-IDSettingsFolder = '0BznBNzYR5OHDdW9yWFZYQzhWRmM'
-IDFolder = '0BznBNzYR5OHDRThmWkFFUXZFcEE' // folder diffide stampate
-urlFirma = 'https://drive.google.com/open?id=0BznBNzYR5OHDaFd3bXRKTHBNcEU'
+IDSettingsFolder = '0BznBNzYR5OHDekFneHBtUVFPMEE'
+IDFolder = '0BznBNzYR5OHDV21nVW50ZW9FVjQ' // folder diffide stampate
+urlFirma = 'https://drive.google.com/a/scenariopubblico.com/file/d/0BznBNzYR5OHDRUo3QjJXNnpRTmc/view?usp=sharing'
 
 //EXPORT
-IDFolderExport = '0BznBNzYR5OHDZVFfMU85aUtqeGM'
+IDFolderExport = '0BznBNzYR5OHDM0gxdGhzcTdOMzA'
 var urlExportTestataPratiche = 'https://docs.google.com/a/scenariopubblico.com/spreadsheets/d/1tnz0XCFKv1svrVGSJ6Fro3i3XgcqaQlTgn1Fn69sCyM/edit'
 var ssExportTestataPratiche = SpreadsheetApp.openByUrl(urlExportTestataPratiche)
 var sheetExportTestataPratiche = ssExportTestataPratiche.getSheetByName('Export Testata Pratiche')
@@ -49,7 +58,15 @@ var urlExportDettagliFatture = 'https://docs.google.com/spreadsheets/d/1HvZZkQE5
 var ssExportDettagliFatture = SpreadsheetApp.openByUrl(urlExportDettagliFatture)
 var sheetExportDettagliFatture = ssExportDettagliFatture.getSheetByName('Export Dettagli Fatture')
 
-*/
+//LETTERE
+
+var urlFileEsportazione = 'https://docs.google.com/spreadsheets/d/1irJ6rGBFU84g7pwqZWMDTg-K7yrR6l3BlPCGKr-Muyg/edit'
+var ssFileEsportazione = SpreadsheetApp.openByUrl(urlFileEsportazione)
+var IDTemplateChiusuraContestazioni = '1d5ZGC_DbG9iUmzC40tMaH5HaO2cOkiv_CFnqe4Xtnj4'
+urlFirmaPGiacona = 'https://drive.google.com/open?id=0BznBNzYR5OHDUjR0REUyb19PWk1aWmpVSWV0OFdOUDRrNzhR '
+
+
+/*
 //**** IOL release ******
 
 //FOLDERS
@@ -67,7 +84,6 @@ var ssDBID = '1GEUt7CDzgXyeXpttijjavcwSTxMD1uQlXdivcN2l8cA'
 var sheetImpostazioni = ssDB.getSheetByName('Impostazioni')
 var sheetFilesAffidi = ssDB.getSheetByName('Files affidi')
 var sheetDiffideDaInviare = ssDB.getSheetByName('Diffide da inviare')
-var sheetDiffideInviate = ssDB.getSheetByName('Diffide inviate')
 var sheetDettaglioFatture = ssDB.getSheetByName('Dettaglio fatture')
 var sheetListaDiControllo = ssDB.getSheetByName('Lista di controllo')
 
@@ -98,5 +114,6 @@ var urlExportDettagliFatture = 'https://docs.google.com/spreadsheets/d/1H_e68UFk
 var ssExportDettagliFatture = SpreadsheetApp.openByUrl(urlExportDettagliFatture)
 var sheetExportDettagliFatture = ssExportDettagliFatture.getSheetByName('Export Dettagli Fatture')
 
+*/
 
 

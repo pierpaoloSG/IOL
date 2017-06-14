@@ -84,7 +84,7 @@ Logger.log(objData.length)
     testata[13] = objDiffideToExport[i]['Codice fiscale'] // CodiceFiscale
     testata[14] = objDiffideToExport[i]['Partita IVA'] // CodiceFiscale
     testata[15] = 9 // IDAccountStatus
-    testata[16] = '' // StatoCamerale
+    testata[16] = objDiffideToExport[i]['Stato camerale'] // StatoCamerale
     testata[17] = objDiffideToExport[i]['Provenienza indirizzo'] // ProvenienzaIndirizzo
     testataOuter.push(testata)    
     
