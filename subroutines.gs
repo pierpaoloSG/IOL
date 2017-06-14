@@ -268,6 +268,7 @@ Logger.log(ssAffido.getUrl())
                  objDiffideDaImportare[i]['Provincia'] = objVisureCamerali[j].provincia
                  objDiffideDaImportare[i]['Telefono'] = String(objCasiNoFatture[i].telefono)
                  objDiffideDaImportare[i]['Provenienza indirizzo'] = 'Info camerali'  
+                 objDiffideDaImportare[i]['Stato camerale'] = objVisureCamerali[j].flagAttivitaAzienda
                  //objDiffideDaImportare[i]['Data importazione'] = dataImportazione
                  //objDiffideDaImportare[i]['Stato'] = 'Importata'  
            } 
