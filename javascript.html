@@ -441,13 +441,13 @@ function onSentExFlusso(message){
             var flusso = parts[parts.length - 1]; // Or parts.pop();
             console.log(flusso)
             //se diversa da IOL 
-            if (flusso != "IOL" ){
+            //if (flusso != "IOL" ){
                // se non ancora inviata viene evidenziata in rosso
                if ($(this).find('td').eq(9).html()=='Inviata'){
                   var $IDtoExport = $(this).closest('tr').find('td').eq(1).html()
                   diffide.push($IDtoExport)
                }
-            }  
+            //}  
       });
 
 //      console.log('pratiche inviate ' + $Sent.length)
@@ -472,10 +472,13 @@ function onSentExFlusso(message){
         $icon.removeClass('glyphicon-export')
         $icon.addClass('glyphicon-refresh glyphicon-refresh-animate')
         //$icon.addClass('glyphicon-refresh-animate')
-      exportDiffide(objDiffide)
+       
+       exportDiffide(objDiffide, 'IOL')
+       exportDiffide(objDiffide, 'MCR')
+       
       })
  
- function exportDiffide(objDiffide){
+ function exportDiffide(objDiffide,typePratiche){
   console.log('exportDiffide ')
       var $icon = $('#export > span')
         $icon.removeClass('glyphicon-export')
@@ -484,7 +487,7 @@ function onSentExFlusso(message){
       google.script.run
       .withSuccessHandler(onExportedDiffide)
       .withFailureHandler(onErrorExporting)
-      .exportDiffide(objDiffide)    
+      .exportDiffide(objDiffide,typePratiche)    
       return false
     }
       
@@ -513,6 +516,7 @@ function onSentExFlusso(message){
       function onErrorExporting(err){
         console.log(err)
         $('#outputPanelText').append('Si è verificato un errore in fase di esportazione delle diffide: ' + err)
+        stop
       }
  
  

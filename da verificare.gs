@@ -9,3 +9,6 @@ function readDataFilesAffidi(){
   Logger.log(arrayFilesAffidi)
   return arrayFilesAffidi
 }
+
+
+

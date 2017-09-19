@@ -39,8 +39,7 @@ function readDiffideFromFiles(arrayObjFilesAffidi){
 function readDiffideDaInviareFromSheet(){
     Logger.log('readDiffideDaInviareFromSheet')
     var objAllDiffideDaInviare = ObjApp.rangeToObjectsNoCamel(sheetDiffideDaInviare.getDataRange().getValues())
-    Logger.log('objAllDiffideDaInviare')
-    Logger.log(objAllDiffideDaInviare)
-    Logger.log(JSON.stringify(objAllDiffideDaInviare))
+    //Logger.log('objAllDiffideDaInviare') 
+    //Logger.log(JSON.stringify(objAllDiffideDaInviare))
     return JSON.stringify(objAllDiffideDaInviare)
 }

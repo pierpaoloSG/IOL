@@ -73,6 +73,8 @@ SVILUPPO
 - Controllo prima di esportazione (verifica che le pratiche siano già inviate) - fatto
 16/05/2017
 - Sostituisce Object all'Array nell'inserimento ex-flusso (in modo da non risentire della modifica del tracciato del DB) - fatto
+19/09/2017
+- Aggiungere controllo per le spese legali su pratiche IOL con importo tra 0  e 3000 - fatto
 
 
 - funzione di eliminazione ultima importazione (cancella testata pratiche e dettagli fatture)

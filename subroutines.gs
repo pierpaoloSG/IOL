@@ -140,7 +140,15 @@ Logger.log(ssAffido.getUrl())
 
  //*******************************************    
  // ciclo i (objCasiNoFatture)
- for (var i=0; i<objCasiNoFatture.length; i++){
+ 
+ // LIMITA LO SCRIPT IN CASO DI file troppo lunghi
+// var start = 475
+// var end = 476
+
+ var start = 0
+ var end = objCasiNoFatture.length
+ 
+ for (var i=start; i<end; i++){
       tipoFlusso = '***'
    Logger.log('i = ' + i)
      //incrementa ID e riferimento pratica 
@@ -166,7 +174,7 @@ Logger.log(ssAffido.getUrl())
      Logger.log("Stato affido " + statoAffido)
      // gestisce lo stato affido da file
      switch (true) {
-       case (statoAffido == 'AFFIDATA_AVV_MCR' ):
+       case (statoAffido == 'AFFIDATA_AVV_MICRON' ):
          tipoFlusso = 'MCR'
          offsetRiferimentoPratica = 2127
          speseLegali = 100.00
@@ -180,6 +188,12 @@ Logger.log(ssAffido.getUrl())
          tipoFlusso = 'IOL'
          offsetRiferimentoPratica = 7219
          switch (true) {
+           case (importoScoperto<1000):
+              speseLegali = 100.00
+           break;
+           case (importoScoperto<3000):
+              speseLegali = 200.00
+           break;
            case (importoScoperto<10000):
              speseLegali = 300.00
              break;
@@ -189,6 +203,9 @@ Logger.log(ssAffido.getUrl())
            case (importoScoperto>20000):
              speseLegali = 500.00
              break;
+            case (importoScoperto<3000):
+             speseLegali = 200.00
+             break;
            default:
              break;
          }
@@ -196,13 +213,15 @@ Logger.log(ssAffido.getUrl())
          break;
      }       
           
-     Logger.log(tipoFlusso)
+     Logger.log('tipoFlusso ' + tipoFlusso)
      // restituisce un querySheet ossia lo sheet che contiene le sole diffide relative al tipoflusso
      var querySheetDiffide = querySheet(tipoFlusso)  
      Logger.log(querySheetDiffide.getName())
      //legge l'ultimo protocollo
      var lastRowPratica = querySheetDiffide.getLastRow()
      Logger.log('lastRowPratica = ' + lastRowPratica)
+
+     
      if (lastRowPratica == 1){
        // se è la prima protocollazione aggiunge l'offset 
        var newRiferimentoPratica = 1 + offsetRiferimentoPratica; 
